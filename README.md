@@ -1,4 +1,4 @@
-####Notes
+###Notes
                 
 + When creating a branch: ```git checkout -b key-<branch-name>```
 + When commiting: ```git commit -m "key <commit message>"```
