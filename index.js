@@ -1,10 +1,11 @@
 const mongoose = require("mongoose");
 const express = require("express");
 const morgan = require("morgan");
-const cors = require("cors");
 const dotenv = require("dotenv");
+const cors = require("cors");
 
 const authenticationRoute = require("./routes/authenticationRoute");
+const productRoutes = require("./routes/productRoutes");
 const authMW = require("./middlewares/authMW");
 
 const port = process.env.port || 8080;
@@ -28,13 +29,14 @@ server.use(morgan("short"));
 
 server.use(express.json());
 
-// Authentication
-server.use(authenticationRoute);
+// authentication
+// server.use(authenticationRoute);
 
-// Authorization
-server.use(authMW);
+// authorization
+// server.use(authMW);
 
 // routes
+server.use(productRoutes);
 
 // not found MW
 server.use((req, res, next) => {
