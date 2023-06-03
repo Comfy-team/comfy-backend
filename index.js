@@ -8,6 +8,7 @@ const authenticationRoute = require("./routes/authenticationRoute");
 const productRoutes = require("./routes/productRoutes");
 const userRoutes = require("./routes/userRoutes");
 const categoryRoutes = require("./routes/categoryRoute");
+const orderRoutes=require("./routes/ordersRoute")
 const authMW = require("./middlewares/authMW");
 
 const port = process.env.port || 8080;
@@ -41,6 +42,7 @@ server.use(express.json());
 server.use(productRoutes);
 server.use(userRoutes);
 server.use(categoryRoutes);
+server.use(orderRoutes);
 
 // not found MW
 server.use((req, res, next) => {
