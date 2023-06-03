@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 const express = require("express");
+// const body_parser = require("body_parser");
+
 const morgan = require("morgan");
 const dotenv = require("dotenv");
 const cors = require("cors");
@@ -9,6 +11,8 @@ const productRoutes = require("./routes/productRoutes");
 const userRoutes = require("./routes/userRoutes");
 const categoryRoutes = require("./routes/categoryRoute");
 const authMW = require("./middlewares/authMW");
+
+const ordersRouter = require("./routes/ordersRoute")
 
 const port = process.env.port || 8080;
 const server = express();
@@ -34,13 +38,10 @@ server.use(express.json());
 // authentication
 // server.use(authenticationRoute);
 
-// authorization
-// server.use(authMW);
+// Authorization
+server.use(authMW);
 
 // routes
-server.use(productRoutes);
-server.use(userRoutes);
-server.use(categoryRoutes);
 
 // not found MW
 server.use((req, res, next) => {
@@ -52,3 +53,4 @@ server.use((error, req, res, next) => {
   res.status(error.status || 500).json({ msg: "" + error });
   // res.status(500).json({ message: "Internal sever error" });
 });
+
