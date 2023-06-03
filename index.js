@@ -1,11 +1,15 @@
 const mongoose = require("mongoose");
 const express = require("express");
+// const body_parser = require("body_parser");
+
 const morgan = require("morgan");
 const cors = require("cors");
 const dotenv = require("dotenv");
 
 const authenticationRoute = require("./routes/authenticationRoute");
 const authMW = require("./middlewares/authMW");
+
+const ordersRouter = require("./routes/ordersRoute")
 
 const port = process.env.port || 8080;
 const server = express();
@@ -32,9 +36,15 @@ server.use(express.json());
 server.use(authenticationRoute);
 
 // Authorization
-server.use(authMW);
+// server.use(authMW);  // i make it comment until we make the token
 
+// parsing data 
+// server.use(body_parser.json()); //json
+// server.use(body_parser.urlencoded()); //form
+ 
 // routes
+server.use(ordersRouter);
+
 
 // not found MW
 server.use((req, res, next) => {
@@ -46,3 +56,4 @@ server.use((error, req, res, next) => {
   res.status(error.status || 500).json({ msg: "" + error });
   // res.status(500).json({ message: "Internal sever error" });
 });
+
