@@ -3,10 +3,13 @@ const express = require("express");
 // const body_parser = require("body_parser");
 
 const morgan = require("morgan");
-const cors = require("cors");
 const dotenv = require("dotenv");
+const cors = require("cors");
 
 const authenticationRoute = require("./routes/authenticationRoute");
+const productRoutes = require("./routes/productRoutes");
+const userRoutes = require("./routes/userRoutes");
+const categoryRoutes = require("./routes/categoryRoute");
 const authMW = require("./middlewares/authMW");
 
 const ordersRouter = require("./routes/ordersRoute")
@@ -32,19 +35,13 @@ server.use(morgan("short"));
 
 server.use(express.json());
 
-// Authentication
-server.use(authenticationRoute);
+// authentication
+// server.use(authenticationRoute);
 
 // Authorization
-// server.use(authMW);  // i make it comment until we make the token
+server.use(authMW);
 
-// parsing data 
-// server.use(body_parser.json()); //json
-// server.use(body_parser.urlencoded()); //form
- 
 // routes
-server.use(ordersRouter);
-
 
 // not found MW
 server.use((req, res, next) => {
