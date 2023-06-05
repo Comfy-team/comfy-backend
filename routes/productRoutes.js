@@ -9,6 +9,10 @@ const router = express.Router();
 
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
+    if (file && !file.mimetype.startsWith("image")) {
+      callback(new Error("invalid image type"));
+      return;
+    }
     callback(null, "./uploads/products/");
   },
   filename: (req, file, callback) => {
@@ -20,8 +24,18 @@ const upload = multer({ storage });
 router
   .route("/products")
   .get(controller.getAllProducts)
-  .post(upload.array("images"), validations.postValidation, validator, controller.addProduct)
-  .patch(validations.updateValidation, validator, controller.updateProduct)
+  .post(
+    upload.array("images"),
+    validations.postValidation,
+    validator,
+    controller.addProduct
+  )
+  .patch(
+    upload.array("images"),
+    validations.updateValidation,
+    validator,
+    controller.updateProduct
+  )
   .delete(validations.deleteValidation, validator, controller.deleteProduct);
 
 router
