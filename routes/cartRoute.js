@@ -8,7 +8,7 @@ const validations = require("../middlewares/validations/cartValidation");
 router
   .route("/cart")
   .get(controller.getAllCarts)
-  .post(validations.postProduct,validator, controller.postProductToCart)
+  // .post(validations.postProduct,validator, controller.postProductToCart)
   .patch(validations.updateProduct,validator, controller.updateProductInCart)
   .delete(validations.deleteProduct,validator, controller.deleteProductFromCart);
 
