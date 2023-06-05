@@ -6,10 +6,11 @@ const cors = require("cors");
 
 const authenticationRoute = require("./routes/authenticationRoute");
 const productRoutes = require("./routes/productRoutes");
+const brandRoutes = require("./routes/brandRoute");
 const userRoutes = require("./routes/userRoutes");
 const categoryRoutes = require("./routes/categoryRoute");
-const orderRoutes=require("./routes/ordersRoute")
-const cartRoutes=require("./routes/cartRoute")
+const orderRoutes = require("./routes/ordersRoute");
+const cartRoutes = require("./routes/cartRoute");
 
 const authMW = require("./middlewares/authMW");
 
@@ -42,11 +43,11 @@ server.use(express.json());
 
 // routes
 server.use(productRoutes);
+server.use(brandRoutes);
 server.use(userRoutes);
 server.use(categoryRoutes);
 server.use(orderRoutes);
 server.use(cartRoutes);
-
 
 // not found MW
 server.use((req, res, next) => {
