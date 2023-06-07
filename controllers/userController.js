@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 
-const saltRounds = 10
+const saltRounds = +process.env.secretKey
 const salt = bcrypt.genSaltSync(saltRounds);
 
 require("../models/userSchema");
@@ -59,14 +59,21 @@ module.exports.updateUser=(request,response,next)=>{
     if (request.body.password != undefined){
         password = bcrypt.hashSync(request.body.password, salt);
     }
-    //remove the fields that I don't want to update it.
-    delete request.body.order; // remove the order field from the request body
-    delete request.body.cart_id; // remove the cart_id field from the request body
+
     User.updateOne(
         {_id:request.body.id},
         {
             $set:{
-                ...request.body
+                fullName: request.body.fullName,
+                password: password,
+                email: request.body.email,
+                phone: request.body.phone,
+                'address.city': request.body.address?.city,
+                'address.street': request.body.address?.street,
+                'address.building': request.body.address?.building,
+                'address.governorate': request.body.address?.governorate,
+                'address.apartment': request.body.address?.apartment,
+                'address.postalCode': request.body.address?.postalCode,
             }   
         }).then((data)=>{
             response.status(200).json(data);
