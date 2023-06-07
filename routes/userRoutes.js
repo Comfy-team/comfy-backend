@@ -14,10 +14,19 @@ router
   .patch(validations.updateValidation,validator,controller.updateUser)
   .delete(validations.deleteValidation,validator,controller.deleteUser)
 
+router
+  .route("/users/orders").get(validator,controller.getAllUsersOrders) 
 
 router
   .route("/users/:id")
   .get(validations.idValidation, validator, controller.getUserById);
+
+router
+  .route("/users/:id/cart").get(validations.idValidation,validator,controller.getUserCart)  
+
+router
+    .route("/users/:id/orders").get(validations.idValidation,validator,controller.getUserOrders) 
+
 
 module.exports = router;
 

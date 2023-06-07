@@ -7,3 +7,5 @@
  ```git checkout -b main-task-key-<branch-name>```
  ``` git commit -m "subtask1-key <commit message> task1"```
  ``` git commit -m "subtask2-key <commit message> task2" ```
+
+ when pull  " git pull origin main "

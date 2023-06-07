@@ -8,12 +8,12 @@ const validations = require("../middlewares/validations/cartValidation");
 router
   .route("/cart")
   .get(controller.getAllCarts)
-  .post(validations.postProduct,validator, controller.postProductToCart)
+  // .post(validations.postProduct,validator, controller.postProductToCart)
   .patch(validations.updateProduct,validator, controller.updateProductInCart)
   .delete(validations.deleteProduct,validator, controller.deleteProductFromCart);
 
 router.route("/cart/:id").get(validations.cartId,validator, controller.getCartById);
 
-router.route("cart/empty").patch(validations.emptyCart,validator, controller.emptyCart);
+router.route("/cart/empty").patch(validations.emptyCart,validator, controller.emptyCart);
 
 module.exports = router;
