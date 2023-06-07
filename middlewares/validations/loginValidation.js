@@ -1,6 +1,6 @@
 const { body } = require("express-validator");
 
 module.exports = [
-  body("username").notEmpty().withMessage("username is required"),
-  body("password").notEmpty().withMessage("password is required"),
+  body("email").isEmail().withMessage("email isn't valid"),
+  body("password").isStrongPassword().withMessage("password isn't correct"),
 ];

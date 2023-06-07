@@ -4,13 +4,13 @@ const morgan = require("morgan");
 const dotenv = require("dotenv");
 const cors = require("cors");
 
+const userRoutes = require("./routes/userRoutes");
 const authenticationRoute = require("./routes/authenticationRoute");
-const productRoutes = require("./routes/productRoutes");
 const brandRoutes = require("./routes/brandRoute");
+const categoryRoutes = require("./routes/categoryRoute");
+const productRoutes = require("./routes/productRoutes");
 const cartRoutes = require("./routes/cartRoute");
 const orderRoutes = require("./routes/ordersRoute");
-const userRoutes = require("./routes/userRoutes");
-const categoryRoutes = require("./routes/categoryRoute");
 
 const authMW = require("./middlewares/authMW");
 
@@ -36,10 +36,10 @@ server.use(morgan("short"));
 server.use(express.json());
 
 // authentication
-// server.use(authenticationRoute);
+server.use(authenticationRoute);
 
 // authorization
-// server.use(authMW);
+server.use(authMW);
 
 // routes
 server.use(productRoutes);
