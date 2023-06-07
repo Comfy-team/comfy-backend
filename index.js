@@ -4,13 +4,13 @@ const morgan = require("morgan");
 const dotenv = require("dotenv");
 const cors = require("cors");
 
+const cartRoutes = require("./routes/cartRoute");
+const orderRoutes = require("./routes/ordersRoute");
 const userRoutes = require("./routes/userRoutes");
 const authenticationRoute = require("./routes/authenticationRoute");
 const brandRoutes = require("./routes/brandRoute");
 const categoryRoutes = require("./routes/categoryRoute");
 const productRoutes = require("./routes/productRoutes");
-const cartRoutes = require("./routes/cartRoute");
-const orderRoutes = require("./routes/ordersRoute");
 
 const authMW = require("./middlewares/authMW");
 
