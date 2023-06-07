@@ -1,4 +1,7 @@
 const Orders = require("../models/ordersSchema");
+const mongoose = require("mongoose");
+
+require("../models/userSchema");
 const User = mongoose.model("users");
 
 exports.getAllOrders = (req, res, next) => {
