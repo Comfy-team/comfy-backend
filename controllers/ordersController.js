@@ -20,7 +20,7 @@ exports.postOrders = (req, res, next) => {
     address: req.body.address,
     phone: req.body.phone,
   });
-  object.save();
+  object.save().
   then(async data => {
     await User.updateOne({ _id: data.user_id }, { $set: { order: data._id } });
     return User.findOne({ _id: data.user_id });
