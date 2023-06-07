@@ -3,31 +3,29 @@ const mongoose=require("mongoose");
 const addressSchema = new mongoose.Schema({
     city: {
       type: String,
-      required: true
+      default:""
     },
     street: {
       type: String,
-      required: true
+      default:""
     },
     building: {
       type: Number,
-      required: true,
-      min: 1
+      default:0,
     },
     governorate: {
       type: String,
-      required: true
+      default:"",
     },
     apartment: {
       type: String,
-      required: true
+      default:0,
     },
     postalCode: {
       type: Number,
-      required: true,
-      min: 1
+      default:0
     }
-  },{ _id: false });
+  },{ _id: false});
 
 const schema = new mongoose.Schema({
     _id:{
@@ -49,20 +47,21 @@ const schema = new mongoose.Schema({
     },
     phone:{
         type:String,
-        required:true,
+        default: "",
     },
     cart_id:{
         type: mongoose.Schema.Types.ObjectId,
-        ref:'carts',
-        required:true
+        ref:'cart',
     },
     order:{
         type: [mongoose.Schema.Types.ObjectId],
-        ref: 'orders'
+        ref: 'orders',
+        default: [],
     },
     address:{
         type: addressSchema,
+        default: {},
     }
-})
+},{ minimize: false })
 
 mongoose.model("users",schema);
