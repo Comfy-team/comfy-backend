@@ -107,6 +107,7 @@ module.exports.getAllUsersOrders=(request,response,next)=>{
     .then(data=>{
         response.status(200).json(data)
     }).catch(error=>next(error))
+    
 }
 
  
