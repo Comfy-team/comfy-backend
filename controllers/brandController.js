@@ -39,7 +39,7 @@ module.exports.getBrandCategoryProducts = (req, res, next) => {
     .populate("products")
     .select("products")
     .then((data) => {
-      if (data === null) {
+      if (data.length === 0) {
         throw new Error("Brand category not found");
       }
       res.status(200).json(data);
@@ -52,7 +52,7 @@ module.exports.addBrand = (req, res, next) => {
     name: req.body.name,
     category: req.body.category,
     image: req.file.path,
-    products: req.body.products,
+    products: req.body.products||[],
   });
   object
     .save()
