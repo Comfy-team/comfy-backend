@@ -20,3 +20,30 @@ module.exports.isAdmin = (req, res, next) => {
     next(error);
   }
 };
+
+module.exports.isUserOrAdmin = (req, res, next) => {
+  if (
+    req.decodedObject.role === "user" ||
+    req.decodedObject.role === "admin"
+  ) {
+    next();
+  } else {
+    let error = new Error("not Authorized");
+    error.status = 403;
+    next(error);
+  }
+};
+
+module.exports.isUserOfIdOrAdmin = (req, res, next) => {
+  if (
+    req.decodedObject.role === "admin" ||
+    (req.decodedObject.role === "user" &&
+      req.decodedObject.id === req.params.id)
+  ) {
+    next();
+  } else {
+    let error = new Error("not Authorized");
+    error.status = 403;
+    next(error);
+  }
+};

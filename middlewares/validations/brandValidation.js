@@ -1,30 +1,17 @@
 const { body, param, check } = require("express-validator");
-const { ObjectId } = require("mongodb");
 
 const validateUploadedImages = (value, { req }) => {
-  if (req.file && !req.file.mimetype.startsWith("image/")) {
+  console.log(req.file);
+  if (!req.file || !req.file.mimetype.startsWith("image/")) {
     throw new Error("Invalid image file type");
   }
-
   return true;
 };
 
 module.exports.postValidation = [
   body("name").isString().withMessage("Brand name must be string"),
   body("category").isString().withMessage("Brand category must be string"),
-  check("image")
-    .notEmpty()
-    .withMessage("images are required")
-    .custom(validateUploadedImages),
-  body("products")
-    .isArray()
-    .withMessage("Products must be array")
-    .custom((value) => {
-      if (!value.every((id) => ObjectId.isValid(+id))) {
-        throw new Error("Invalid ObjectId of product");
-      }
-      return true;
-    }),
+  check("image").custom(validateUploadedImages),
 ];
 
 module.exports.updateValidation = [
@@ -35,16 +22,6 @@ module.exports.updateValidation = [
     .isString()
     .withMessage("Brand category must be string"),
   check("image").optional().custom(validateUploadedImages),
-  body("products")
-    .optional()
-    .isArray()
-    .withMessage("Products must be array")
-    .custom((value) => {
-      if (!value.every((id) => ObjectId.isValid(+id))) {
-        throw new Error("Invalid ObjectId of product");
-      }
-      return true;
-    }),
 ];
 
 module.exports.deleteValidation = [
