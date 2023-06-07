@@ -7,7 +7,7 @@ const salt = bcrypt.genSaltSync(saltRounds);
 require("../models/userSchema");
 const Cart = mongoose.model('cart')
 const User = mongoose.model("users");
-const Orders = mongoose.model("orders");
+
 
 module.exports.getAllUsers = (request,response,next) => 
 {
@@ -102,54 +102,11 @@ module.exports.getUserOrders=(request,response,next)=>{
 }
 
 module.exports.getAllUsersOrders=(request,response,next)=>{ 
-    Orders.aggregate([
-        {
-          $lookup: {
-            from: 'users',
-            localField: 'userId',
-            foreignField: '_id',
-            as: 'user_details'
-          }
-        },
-        {
-          $group: {
-            _id: '$userId',
-            fullName:{ $first: '$user_details.fullName' },
-            orders: {
-              $push: {
-                _id: '$_id',
-                cartId: '$cartId',
-                address: '$address',
-                phone: '$phone',
-                date: '$date'
-              }
-            },
-            
-          }
-        },
-        {
-            $unwind: "$fullName"
-        },
-      ])
-        .exec()
-        .then(users => {
-          response.status(200).json(users);
-        })
-        .catch(error => {
-          next(error)
-        });
+
+    User.find({order: { $exists: true, $ne: [] }},{fullName:1}).populate({path:"order"})
+    .then(data=>{
+        response.status(200).json(data)
+    }).catch(error=>next(error))
 }
 
-    // Orders.find({},{userId:1,address:1}).populate({path:"userId",select:{fullName:1,email:1,order:1}})
-    // .then(
-    //     orders => {
-    //     const users = new Set();
-    //     orders.forEach(order => users.add(order.userId));
-    //     const usersArray = Array.from(users);
-    //     return response.status(200).json({
-    //       users: usersArray
-    //     });
-        
-    //     // data=>{
-    //     // response.status(200).json(data)
-    // }).catch(error=>next(error))
+ 
