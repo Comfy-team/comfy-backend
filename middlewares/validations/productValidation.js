@@ -1,7 +1,7 @@
 const { body, param, check } = require("express-validator");
 
 const validateUploadedImages = (value, { req }) => {
-  if (req.files && Object.keys(req.files).length === 0) {
+  if (!req.files || Object.keys(req.files).length === 0) {
     throw new Error("No image file uploaded");
   }
   return true;
