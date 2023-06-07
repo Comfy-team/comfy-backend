@@ -26,13 +26,12 @@ module.exports.getCategoryById = (request,response,next) => {
 module.exports.addCategory = (request,response,next) => {
     let object = new Category({
         name: request.body.name,
-        products_id: request.body.products_id,
         image:request.file.path
       });
       object.save()
       .then(data=>{
           response.status(201).json(data)
-      })
+      }).catch(error=>next(error));
 }
 
 module.exports.updateCategory = (request,response,next) => {
@@ -41,7 +40,6 @@ module.exports.updateCategory = (request,response,next) => {
         {
             $set:{
                 name: request.body.name,
-                products_id: request.body.products_id,
                 image:imagePath
             }
         })

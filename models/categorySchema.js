@@ -12,7 +12,7 @@ const schema = new mongoose.Schema({
     products_id:{
         type:[mongoose.Schema.Types.ObjectId],
         ref:'products',
-        required:true
+        default:[]
     },
     image:{
         type:String,
