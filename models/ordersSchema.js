@@ -37,11 +37,11 @@ const addressSchema = new mongoose.Schema(
 const ordersSchema = new schema({
   userId: { type: mongoose.Types.ObjectId, ref: "users" },
   _id: { type: mongoose.Types.ObjectId, auto: true },
-  cartId: { type: mongoose.Types.ObjectId, ref: "carts" },
+  cartId: { type: mongoose.Types.ObjectId, ref: "cart" },
   address: {
     type: addressSchema,
   },
-  phone: { type: Number, ref: "users" , required:true,}, //i confused if i should make phone sting or number 
+  phone: { type: String, ref: "users" , required:true,}, //i confused if i should make phone sting or number 
 
   date: { type: Date, default: Date.now },
 });
