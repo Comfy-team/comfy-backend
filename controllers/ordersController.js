@@ -1,4 +1,5 @@
 const Orders = require("../models/ordersSchema");
+const User = mongoose.model("users");
 
 exports.getAllOrders = (req, res, next) => {
   Orders.find({})
@@ -16,8 +17,11 @@ exports.postOrders = (req, res, next) => {
     address: req.body.address,
     phone: req.body.phone,
   });
-  object
-    .save()
+  object.save();
+  then(async data => {
+    await User.updateOne({ _id: data.user_id }, { $set: { order: data._id } });
+    return User.findOne({ _id: data.user_id });
+  })
     .then(data => {
       res.status(201).json(data);
     })
@@ -34,7 +38,7 @@ exports.updateSingleOrders = (req, res) => {
     { _id: req.body.id },
     {
       $set: {
-        userId: req.body.userId,
+        // /**userId: req.body.userId**/
         phone: req.body.phone,
         cartId: req.body.cartId,
         "address.city": req.body.address.city,
