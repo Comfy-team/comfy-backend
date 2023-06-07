@@ -10,13 +10,11 @@ exports.getAllOrders = (req, res, next) => {
 };
 
 exports.postOrders = (req, res, next) => {
-  // res.send("postOrders orders")
-
   const object = new Orders({
+    userId: req.body.userId,
     cartId: req.body.cartId,
     address: req.body.address,
     phone: req.body.phone,
-    date: req.body.date,
   });
   object
     .save()
@@ -29,12 +27,29 @@ exports.postOrders = (req, res, next) => {
   console.log(res);
 };
 
-exports.deleteSingleOrders = (req, res) => {
-  res.send("deleteSingleOrders orders");
-};
-
 exports.updateSingleOrders = (req, res) => {
-  res.send("updateSingleOrders orders");
+  // res.send("updateSingleOrders orders");
+
+  Orders.updateOne(
+    { _id: req.body.id },
+    {
+      $set: {
+        userId: req.body.userId,
+        phone: req.body.phone,
+        cartId: req.body.cartId,
+        "address.city": req.body.address.city,
+        "address.street": req.body.address.street,
+        "address.building": req.body.address.building,
+        "address.governorate": req.body.address.governorate,
+        "address.apartment": req.body.address.apartment,
+        "address.postalCode": req.body.address.postalCode,
+      },
+    }
+  )
+    .then(data => {
+      res.status(200).json(data);
+    })
+    .catch(error => next(error));
 };
 exports.getSingleOrders = (req, res, next) => {
   Orders.findOne({ _id: req.params.id })
@@ -44,6 +59,20 @@ exports.getSingleOrders = (req, res, next) => {
       } else {
         res.json(data);
       }
+    })
+    .catch(error => next(error));
+};
+
+exports.deleteSingleOrders = (req, res, next) => {
+  Orders.findOne({ _id: req.body.id })
+    .then(Order => {
+      if (!Order) {
+        throw new Error("Order not found with the specified _id value");
+      }
+      return Order.deleteOne({ _id: req.body.id });
+    })
+    .then(data => {
+      res.status(200).json(data);
     })
     .catch(error => next(error));
 };
