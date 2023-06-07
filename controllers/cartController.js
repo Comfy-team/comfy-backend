@@ -19,29 +19,29 @@ exports.getCartById = (req, res) => {
     .catch((err) => res.status(500).json({ message: err.message }));
 };
 
-exports.postProductToCart = (req, res) => {
-  const { user_id, product_id, quantity, color } = req.body;
-  Cart.findOne({ user_id })
-    .then((cart) => {
-      if (!cart) {
-        cart = new Cart({
-          user_id,
-          totalPrice: 0,
-          items: [],
-        });
-      }
-      const itemIndex = cart.items.findIndex((item) => item.product_id.toString() === product_id);
-      if (itemIndex === -1) {
-        cart.items.push({ product_id, quantity, color });
-      } else {
-        cart.items[itemIndex].quantity += quantity;
-      }
-      cart.totalPrice += quantity;
-      return cart.save();
-    })
-    .then((cart) => res.status(201).json(cart))
-    .catch((err) => res.status(500).json({ message: err.message }));
-};
+// exports.postProductToCart = (req, res) => {
+//   const { user_id, product_id, quantity, color } = req.body;
+//   Cart.findOne({ user_id })
+//     .then((cart) => {
+//       if (!cart) {
+//         cart = new Cart({
+//           user_id,
+//           totalPrice: 0,
+//           items: [],
+//         });
+//       }
+//       const itemIndex = cart.items.findIndex((item) => item.product_id.toString() === product_id);
+//       if (itemIndex === -1) {
+//         cart.items.push({ product_id, quantity, color });
+//       } else {
+//         cart.items[itemIndex].quantity += quantity;
+//       }
+//       cart.totalPrice += quantity;
+//       return cart.save();
+//     })
+//     .then((cart) => res.status(201).json(cart))
+//     .catch((err) => res.status(500).json({ message: err.message }));
+// };
 
 exports.updateProductInCart = (req, res) => {
   const { product_id, quantity, color } = req.body;
