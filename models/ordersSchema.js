@@ -46,9 +46,5 @@ const ordersSchema = new schema({
   date: { type: Date, default: Date.now },
 });
 
-module.exports = mongoose.model("orders", ordersSchema);
+mongoose.model("orders", ordersSchema);
 // orders  are the name of collection
-
-
-
-
