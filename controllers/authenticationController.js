@@ -26,7 +26,7 @@ module.exports.login = (req, res, next) => {
     // Check if user
     User.findOne({
       email: req.body.email,
-      password: bcrypt.hashSync(request.body.password, salt),
+      password: bcrypt.hashSync(req.body.password, salt),
     })
       .then((userObj) => {
         if (userObj === null) {
