@@ -3,20 +3,23 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 
 const User = mongoose.model("users");
-const saltRounds = 10;
+const saltRounds = +process.env.saltRounds;
 const salt = bcrypt.genSaltSync(saltRounds);
 
 module.exports.login = (req, res, next) => {
   let token;
   // Check if admin
-  if (req.body.username === "admin" && req.body.password === "123_Admin_321") {
+  if (
+    req.body.email === "admin@gmail.com" &&
+    req.body.password === "123_Admin_321"
+  ) {
     token = jwt.sign(
       {
-        username: "admin",
+        email: "admin@gmail.com",
         role: "admin",
       },
       process.env.secretKey,
-      { expiresIn: "3h" }
+      { expiresIn: "6h" }
     );
     res.status(200).json({ data: "ok", token });
   } else {
@@ -36,7 +39,7 @@ module.exports.login = (req, res, next) => {
             role: "user",
           },
           process.env.secretKey,
-          { expiresIn: "3h" }
+          { expiresIn: "6h" }
         );
         res.status(200).json({ data: "ok", token });
       })
