@@ -4,6 +4,7 @@ const multer = require("multer");
 const validations = require("../middlewares/validations/categoryValidation");
 const validator = require("../middlewares/validations/validator");
 const controller = require("../controllers/categoryController");
+const authMW =require("./../middlewares/authMw");
 
 const router = express.Router();
 
@@ -35,9 +36,9 @@ const storage = multer.diskStorage({
 router
   .route("/categories")
   .get(controller.getAllCategory)
-  .post(upload.single("image"),validations.postValidation,validator,controller.addCategory)
-  .patch(upload.single('image'),validations.updateValidation,validator,controller.updateCategory)
-  .delete(validations.deleteValidation,validator,controller.deleteCategory)
+  .post(authMW.verifyToken,authMW.isAdmin,upload.single("image"),validations.postValidation,validator,controller.addCategory)
+  .patch(authMW.verifyToken,authMW.isAdmin,upload.single('image'),validations.updateValidation,validator,controller.updateCategory)
+  .delete(authMW.verifyToken,authMW.isAdmin,validations.deleteValidation,validator,controller.deleteCategory)
 
   router
   .route("/categories/:id")
