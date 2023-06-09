@@ -9,7 +9,7 @@ const validateUploadedImages = ((value, { req }) => {
     }
     return true;
   });
-
+  
 exports.postValidation=[
     body("name").isString().withMessage('name must be string'),
     check("image").custom(validateUploadedImages)   
