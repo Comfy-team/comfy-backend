@@ -30,6 +30,3 @@ exports.idValidation=[
     param("id").isMongoId().withMessage('Invalid ObjectId'), 
 ]
 
-exports.getCategotyProducts=[
-    body("name").isString().withMessage('name must be string')
-]
