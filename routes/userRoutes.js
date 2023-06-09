@@ -12,7 +12,7 @@ router
   .route("/users")
   .get(authMW.verifyToken,authMW.isAdmin,controller.getAllUsers)
   .patch(authMW.verifyToken,authMW.isUserOfIdOrAdmin,validations.updateValidation,validator,controller.updateUser)
-  .delete(authMW.isUserOfIdOrAdmin,validations.deleteValidation,validator,controller.deleteUser)
+  .delete(authMW.verifyToken,authMW.isUserOfIdOrAdmin,validations.deleteValidation,validator,controller.deleteUser)
 
 router
   .route("/users/orders").get(authMW.verifyToken,authMW.isAdmin,validator,controller.getAllUsersOrders) 
