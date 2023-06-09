@@ -23,7 +23,7 @@ exports.postOrders = (req, res, next) => {
   });
   object.save().
   then(async data => {
-    await User.updateOne({ _id: data.userId }, { $set: { order: data._id } });
+    await User.updateOne({ _id: data.userId }, { $push: { order: data._id } });
     return data;
   })
     .then(data => {
