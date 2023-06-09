@@ -12,7 +12,6 @@ const brandRoutes = require("./routes/brandRoute");
 const categoryRoutes = require("./routes/categoryRoute");
 const productRoutes = require("./routes/productRoutes");
 const registerRoutes =require("./routes/register")
-
 const authMW = require("./middlewares/authMw");
 
 const port = process.env.port || 8080;
@@ -37,6 +36,7 @@ server.use(morgan("short"));
 server.use(express.json());
 
 server.use(registerRoutes);
+
 // authentication
 server.use(authenticationRoute);
 
