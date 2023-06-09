@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 
 const User = mongoose.model("users");
-const saltRounds = +process.env.saltRounds;
+const saltRounds = process.env.saltRounds;
 const salt = bcrypt.genSaltSync(saltRounds);
 
 module.exports.login = (req, res, next) => {
@@ -24,12 +24,13 @@ module.exports.login = (req, res, next) => {
     res.status(200).json({ data: "ok", token });
   } else {
     // Check if user
-    User.findOne({
-      email: req.body.email,
-      password: bcrypt.hashSync(req.body.password, salt),
-    })
+    User.findOne({ email: req.body.email })
       .then((userObj) => {
         if (userObj === null) {
+          throw new Error("not authenticated");
+        }
+        let result = bcrypt.compareSync(req.body.password, userObj.password);
+        if (!result) {
           throw new Error("not authenticated");
         }
         token = jwt.sign(
