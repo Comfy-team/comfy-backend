@@ -9,7 +9,7 @@ const validateUploadedImages = ((value, { req }) => {
     }
     return true;
   });
-
+  
 exports.postValidation=[
     body("name").isString().withMessage('name must be string'),
     check("image").custom(validateUploadedImages)   
@@ -30,6 +30,3 @@ exports.idValidation=[
     param("id").isMongoId().withMessage('Invalid ObjectId'), 
 ]
 
-exports.getCategotyProducts=[
-    body("name").isString().withMessage('name must be string')
-]
