@@ -1,7 +1,8 @@
-const Orders = require("../models/ordersSchema");
 const mongoose = require("mongoose");
 
-require("../models/userSchema");
+require("../models/ordersSchema");
+
+const Orders = mongoose.model("orders");
 const User = mongoose.model("users");
 
 exports.getAllOrders = (req, res, next) => {
@@ -20,10 +21,10 @@ exports.postOrders = (req, res, next) => {
     address: req.body.address,
     phone: req.body.phone,
   });
-  object.save();
+  object.save().
   then(async data => {
-    await User.updateOne({ _id: data.user_id }, { $set: { order: data._id } });
-    return User.findOne({ _id: data.user_id });
+    await User.updateOne({ _id: data.userId }, { $set: { order: data._id } });
+    return data;
   })
     .then(data => {
       res.status(201).json(data);
@@ -34,35 +35,11 @@ exports.postOrders = (req, res, next) => {
   console.log(res);
 };
 
-exports.updateSingleOrders = (req, res) => {
-  // res.send("updateSingleOrders orders");
-
-  Orders.updateOne(
-    { _id: req.body.id },
-    {
-      $set: {
-        // /**userId: req.body.userId**/
-        phone: req.body.phone,
-        cartId: req.body.cartId,
-        "address.city": req.body.address.city,
-        "address.street": req.body.address.street,
-        "address.building": req.body.address.building,
-        "address.governorate": req.body.address.governorate,
-        "address.apartment": req.body.address.apartment,
-        "address.postalCode": req.body.address.postalCode,
-      },
-    }
-  )
-    .then(data => {
-      res.status(200).json(data);
-    })
-    .catch(error => next(error));
-};
 exports.getSingleOrders = (req, res, next) => {
   Orders.findOne({ _id: req.params.id })
     .then(data => {
       if (data == null) {
-        throw new Error("not id in list");
+        throw new Error("order not found");
       } else {
         res.json(data);
       }

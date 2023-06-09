@@ -41,7 +41,12 @@ module.exports.addProduct = (req, res, next) => {
   object
     .save()
     .then((data) => {
+      // Add product to brand
       Brand.updateOne({ _id: data.brand }, { $push: { products: data._id } })
+        .then(() => true)
+        .catch((error) => next(error));
+      // Add product to category
+      Category.updateOne({ _id: data.category }, { $push: { products_id: data._id } })
         .then(() => true)
         .catch((error) => next(error));
       return data;

@@ -13,6 +13,7 @@ const categoryRoutes = require("./routes/categoryRoute");
 const productRoutes = require("./routes/productRoutes");
 const registerRoutes =require("./routes/register")
 
+const authMW = require("./middlewares/authMw");
 
 const port = process.env.port || 8080;
 const server = express();
@@ -40,6 +41,7 @@ server.use(registerRoutes);
 server.use(authenticationRoute);
 
 // authorization
+server.use(authMW);
 
 // routes
 server.use(productRoutes);

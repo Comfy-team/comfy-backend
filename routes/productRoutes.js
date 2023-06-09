@@ -4,6 +4,7 @@ const multer = require("multer");
 const validations = require("../middlewares/validations/productValidation");
 const validator = require("../middlewares/validations/validator");
 const controller = require("../controllers/productController");
+const { isAdmin } = require("../middlewares/authMw");
 
 const router = express.Router();
 
@@ -25,18 +26,25 @@ router
   .route("/products")
   .get(controller.getAllProducts)
   .post(
+    isAdmin,
     upload.array("images"),
     validations.postValidation,
     validator,
     controller.addProduct
   )
   .patch(
+    isAdmin,
     upload.array("images"),
     validations.updateValidation,
     validator,
     controller.updateProduct
   )
-  .delete(validations.deleteValidation, validator, controller.deleteProduct);
+  .delete(
+    isAdmin,
+    validations.deleteValidation,
+    validator,
+    controller.deleteProduct
+  );
 
 router
   .route("/products/:id")
