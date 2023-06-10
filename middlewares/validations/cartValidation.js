@@ -1,23 +1,19 @@
 const { body, param } = require("express-validator");
-const validator = require("validator");
 
 exports.cartId = [param("id").isMongoId().withMessage("Invalid ObjectId")];
 
-// exports.postProduct = [
-//   body("user_id").isMongoId().withMessage("Invalid ObjectId"),
-//   body("product_id").isMongoId().withMessage("Invalid ObjectId"),
-//   body("quantity").isInt({ min: 1 }).withMessage("Quantity must be at least 1"),
-//   body("color").isString().withMessage("Color must be a string"),
-// ];
+exports.postProduct = [
+  body("product_id").isMongoId().withMessage("Invalid ObjectId"),
+  body("color").isString().withMessage("Color must be a string"),
+  body("price").isNumeric().withMessage("Price must be a number"),
+];
 
 exports.updateProduct = [
-  body("product_id").optional().isMongoId().withMessage("Invalid ObjectId"),
-  body("quantity").optional().isInt({ min: 1 }).withMessage("Quantity must be at least 1"),
-  body("color").optional().isString().withMessage("Color must be a string"),
+  body("itemId").isMongoId().withMessage("Invalid item ID"),
+  body('quantity').isInt({ min: 1 }).withMessage('Quantity must be at least 1'),
 ];
 
 exports.deleteProduct = [
-  body("product_id").isMongoId().withMessage("Invalid ObjectId"),
+  body("itemId").isMongoId().withMessage("Invalid item ID"),
 ];
 
-exports.emptyCart = [body("cart_id").isMongoId().withMessage("Invalid ObjectId")];
