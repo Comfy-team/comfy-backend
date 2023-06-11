@@ -1,19 +1,19 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
+const controller = require('../controllers/cartController');
+const validations = require('../middlewares/validations/cartValidation');
+const validator = require('../middlewares/validations/validator');
+const {isUserOrAdmin,isAdmin,verifyToken } = require("../middlewares/authMw");
 
-const  controller= require("../controllers/cartController");
-const validator = require("../middlewares/validations/validator");
-const validations = require("../middlewares/validations/cartValidation");
+router.get('/cart',verifyToken,isAdmin, controller.getAllCarts);
 
-router
-  .route("/cart")
-  .get(controller.getAllCarts)
-  // .post(validations.postProduct,validator, controller.postProductToCart)
-  .patch(validations.updateProduct,validator, controller.updateProductInCart)
-  .delete(validations.deleteProduct,validator, controller.deleteProductFromCart);
+router.route("/cart/:id")
+.get(verifyToken,isUserOrAdmin,validations.cartId, validator, controller.getCartById)
+.post(verifyToken,isUserOrAdmin,validations.postProduct, validator, controller.postProductToCart);
 
-router.route("/cart/:id").get(validations.cartId,validator, controller.getCartById);
+router.patch('/cart/:id/empty', verifyToken,isUserOrAdmin,validator, controller.emptyCart);
 
-router.route("/cart/empty").patch(validations.emptyCart,validator, controller.emptyCart);
+router.patch('/cart/:id/delete', verifyToken,isUserOrAdmin,validations.deleteProduct, validator, controller.deleteProductFromCart);
 
+router.patch('/cart/:cartId/update', verifyToken,isUserOrAdmin,validations.updateProduct, validator, controller.updateProductInCart);
 module.exports = router;
