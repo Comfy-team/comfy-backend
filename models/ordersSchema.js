@@ -41,10 +41,9 @@ const ordersSchema = new schema({
   address: {
     type: addressSchema,
   },
-  phone: { type: String, ref: "users" , required:true,}, //i confused if i should make phone sting or number 
+  phone: { type: String, ref: "users" , required:true,},
 
   date: { type: Date, default: Date.now },
 });
 
 mongoose.model("orders", ordersSchema);
-// orders  are the name of collection
