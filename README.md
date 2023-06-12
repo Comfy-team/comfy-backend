@@ -9,4 +9,4 @@
  ``` git commit -m "subtask2-key <commit message> task2" ```
 
  when pull  " git pull origin main "
- to go to specofic branch "``git checkout <branch-name> ``"
+ to go to specific branch "``git checkout <branch-name> ``"
