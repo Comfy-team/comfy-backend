@@ -8,7 +8,6 @@ const User = mongoose.model("users");
 exports.getAllOrders = (req, res, next) => {
   Orders.find({})
     .then(data => {
-      // res.send("get all orders")
       res.status(200).json({ data });
     })
     .catch(error => next(error));
@@ -31,7 +30,6 @@ exports.postOrders = (req, res, next) => {
     })
     .catch(error => next(error));
 
-  //   res.send(res.body);
   console.log(res);
 };
 
