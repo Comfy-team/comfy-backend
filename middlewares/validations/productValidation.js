@@ -14,7 +14,15 @@ module.exports.postValidation = [
   body("description").isString().withMessage("Description must be string"),
   body("price").isNumeric().withMessage("Price must be number"),
   check("images").custom(validateUploadedImages),
-  body("color").matches(colorHexRegex).withMessage("Color must be hex code"),
+  body("colors")
+    .isArray({ min: 1 })
+    .withMessage("colors must be array of hex colors")
+    .custom((arr) => {
+      if (!arr.every((ele) => colorHexRegex.test(ele))) {
+        throw new Error("color must be hex");
+      }
+      return true;
+    }),
   body("discount").isNumeric().withMessage("Discount must be number"),
   body("stock").isInt().withMessage("Stock must be integer"),
   body("category").isMongoId().withMessage("Category id must be mongoId"),
@@ -30,10 +38,15 @@ module.exports.updateValidation = [
     .withMessage("Description must be string"),
   body("price").optional().isNumeric().withMessage("Price must be number"),
   check("images").optional().custom(validateUploadedImages),
-  body("color")
+  body("colors")
     .optional()
-    .matches(colorHexRegex)
-    .withMessage("Color must be hex code"),
+    .isArray({ min: 1 })
+    .withMessage("colors must be array of hex colors")
+    .custom((arr) => {
+      if (!arr.every((ele) => colorHexRegex.test(ele)))
+        throw new Error("color must be hex");
+      return true;
+    }),
   body("discount")
     .optional()
     .isNumeric()
