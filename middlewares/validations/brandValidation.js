@@ -1,7 +1,6 @@
 const { body, param, check } = require("express-validator");
 
 const validateUploadedImages = (value, { req }) => {
-  console.log(req.file);
   if (!req.file || !req.file.mimetype.startsWith("image/")) {
     throw new Error("Invalid image file type");
   }
