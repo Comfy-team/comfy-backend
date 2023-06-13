@@ -27,12 +27,15 @@ module.exports.addProduct = (req, res, next) => {
   const imagesArr = req.files.map((img) => {
     return { src: img.path };
   });
+  const colorsArr = req.body.colors.map((ele) => {
+    return { color: ele };
+  });
   let object = new Product({
     name: req.body.name,
     description: req.body.description,
     price: req.body.price,
     images: imagesArr,
-    color: req.body.color,
+    colors: colorsArr,
     discount: req.body.discount,
     stock: req.body.stock,
     category: req.body.category,
@@ -46,7 +49,10 @@ module.exports.addProduct = (req, res, next) => {
         .then(() => true)
         .catch((error) => next(error));
       // Add product to category
-      Category.updateOne({ _id: data.category }, { $push: { products_id: data._id } })
+      Category.updateOne(
+        { _id: data.category },
+        { $push: { products_id: data._id } }
+      )
         .then(() => true)
         .catch((error) => next(error));
       return data;
