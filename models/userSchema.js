@@ -19,7 +19,7 @@ const addressSchema = new mongoose.Schema({
     },
     apartment: {
       type: String,
-      default:0,
+      default:"",
     },
     postalCode: {
       type: Number,
