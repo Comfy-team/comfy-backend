@@ -16,16 +16,15 @@ const registerRoutes =require("./routes/register")
 const port = process.env.port || 8080;
 const server = express();
 dotenv.config();
-
 mongoose
-  .connect("mongodb://127.0.0.1:27017/comfy")
-  .then(() => {
-    console.log("DB is connected");
-    server.listen(port, () => {
-      console.log("Up and listenin to port", port);
-    });
-  })
-  .catch((error) => console.log("Error in DB " + error));
+.connect("mongodb://127.0.0.1:27017/comfy")
+.then(() => {
+  console.log("DB is connected");
+  server.listen(port, () => {
+    console.log("Up and listenin to port", port);
+  });
+})
+.catch((error) => console.log("Error in DB " + error));
 
 server.use(cors());
 
@@ -38,6 +37,8 @@ server.use(registerRoutes);
 
 // authentication
 server.use(authenticationRoute);
+
+server.use("/uploads", express.static('uploads'))
 
 // routes
 server.use(productRoutes);
