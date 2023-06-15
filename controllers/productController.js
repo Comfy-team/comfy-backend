@@ -8,7 +8,19 @@ const Category = mongoose.model("categories");
 
 module.exports.getAllProducts = (req, res, next) => {
   Product.find({})
-    .then((data) => res.status(200).json(data))
+    .then((data) => {
+      const page = req.query.page;
+      const dataPerPage = 12;
+      const totalPages = Math.ceil(data.length / 12);
+      const pageData = data.slice(
+        (page - 1) * dataPerPage,
+        (page - 1) * dataPerPage + dataPerPage
+      );
+      res.status(200).json({
+        data: pageData,
+        totalPages
+      });
+    })
     .catch((error) => next(error));
 };
 
