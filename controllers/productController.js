@@ -7,18 +7,54 @@ const Brand = mongoose.model("brands");
 const Category = mongoose.model("categories");
 
 module.exports.getAllProducts = (req, res, next) => {
-  Product.find({})
-    .then((data) => {
-      const page = req.query.page;
+  const filter = {};
+  const sorting = {};
+  if (req.query.price != 0) {
+    filter.price = { $lte: +req.query.price };
+  }
+  if (req.query.brand && req.query.brand !== "all") {
+    filter.brand = req.query.brand;
+  }
+  if (req.query.category && req.query.category !== "all") {
+    filter.category = req.query.category;
+  }
+  if (req.query.sort == -1 || req.query.sort == 1) {
+    sorting.price = Number(req.query.sort);
+  }
+  Product.find(filter)
+    .sort(sorting)
+    .then(async (data) => {
+      let maxPrice, minPrice;
       const dataPerPage = 12;
+      const page = req.query.page;
       const totalPages = Math.ceil(data.length / 12);
       const pageData = data.slice(
         (page - 1) * dataPerPage,
         (page - 1) * dataPerPage + dataPerPage
       );
+      if (req.query.sort === 1) {
+        minPrice = data[0];
+        maxPrice = data[data.length - 1];
+      } else if (req.query.sort === -1) {
+        maxPrice = data[0];
+        minPrice = data[data.length - 1];
+      } else {
+        minPrice = await Product.find(filter, { price: 1 })
+          .sort({ price: 1 })
+          .limit(1)
+          .then((data) => data[0]?data[0].price:0)
+          .catch((error) => next(error));
+        maxPrice = await Product.find(filter, { price: 1 })
+          .sort({ price: -1 })
+          .limit(1)
+          .then((data) => data[0]?data[0].price:0)
+          .catch((error) => next(error));
+      }
       res.status(200).json({
         data: pageData,
-        totalPages
+        totalPages,
+        minPrice,
+        maxPrice,
       });
     })
     .catch((error) => next(error));
