@@ -17,8 +17,8 @@ const schema = new mongoose.Schema({
   colors: [colorSchema],
   discount: Number,
   stock: Number,
-  category: mongoose.Schema.Types.ObjectId,
-  brand: mongoose.Schema.Types.ObjectId,
+  category: {type:mongoose.Schema.Types.ObjectId, ref:"categories"},
+  brand: {type:mongoose.Schema.Types.ObjectId, ref:"brands"},
 });
 
 mongoose.model("products", schema);

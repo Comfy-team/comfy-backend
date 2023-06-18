@@ -42,12 +42,12 @@ module.exports.getAllProducts = (req, res, next) => {
         minPrice = await Product.find(filter, { price: 1 })
           .sort({ price: 1 })
           .limit(1)
-          .then((data) => data[0]?data[0].price:0)
+          .then((data) => (data[0] ? data[0].price : 0))
           .catch((error) => next(error));
         maxPrice = await Product.find(filter, { price: 1 })
           .sort({ price: -1 })
           .limit(1)
-          .then((data) => data[0]?data[0].price:0)
+          .then((data) => (data[0] ? data[0].price : 0))
           .catch((error) => next(error));
       }
       res.status(200).json({
@@ -62,6 +62,8 @@ module.exports.getAllProducts = (req, res, next) => {
 
 module.exports.getProductById = (req, res, next) => {
   Product.findOne({ _id: req.params.id })
+    .populate("brand")
+    .populate("category")
     .then((obj) => {
       if (obj === null) {
         throw new Error("product isn't found");
