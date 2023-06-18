@@ -54,27 +54,15 @@ exports.postProductToCart = (req, res, next) => {
 };
 
 exports.updateProductInCart = (req, res, next) => {
-  const { cartId } = req.params;
-  const { itemId, quantity } = req.body;
-
-  Cart.findOne({ _id: cartId })
+  Cart.findOne({ _id: req.params.cartId })
     .then((cart) => {
-      const item = cart.items.find((item) => item._id.toString() === itemId);
-      if (!item) {
-        throw new Error("Item not found in cart");
-      }
-      const oldQuantity = item.quantity;
-      item.quantity = quantity;
-      return cart.save();
-    })
-    .then((cart) => {
+      const item = cart.items.find(
+        (item) => item.product_id.toString() === req.body.itemId
+      );
+      item.quantity = req.body.quantity;
       cart.totalPrice = cart.items.reduce((total, item) => {
-        if (!isNaN(item.price)) {
-          const item_price = item.price * item.quantity;
-          return total + item_price;
-        } else {
-          return total;
-        }
+        const item_price = item.price * item.quantity;
+        return total + item_price;
       }, 0);
       return cart.save();
     })
@@ -85,30 +73,20 @@ exports.updateProductInCart = (req, res, next) => {
 };
 
 module.exports.deleteProductFromCart = (req, res, next) => {
-  const { itemId } = req.body;
-  const { id } = req.params;
-
-  Cart.findOne({ _id: id })
-    .populate('items.product')
+  Cart.findOne({ _id: req.params.id })
+    .populate("items.product")
     .then((cart) => {
-      if (!cart) {
-        throw new Error('Cart not found');
-      }
-
-      const item = cart.items.find((item) => item._id.toString() === itemId);
-      if (!item) {
-        throw new Error('Item not found in cart');
-      }
-
-      cart.items.pull(itemId);
-
-      const item_price = item.price * item.quantity;
+      const itemIndx = cart.items.findIndex(
+        (item) => item.product_id.toString() === req.body.itemId
+      );
+      cart.items.splice(itemIndx, 1);
+      const item_price =
+        cart.items[itemIndx].price * cart.items[itemIndx].quantity;
       cart.totalPrice -= item_price;
-
       return cart.save();
     })
     .then((cart) => {
-      res.status(200).json({ msg: 'Product deleted successfully' });
+      res.status(200).json(cart);
     })
     .catch((error) => {
       next(error);
