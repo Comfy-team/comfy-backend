@@ -79,10 +79,10 @@ module.exports.deleteProductFromCart = (req, res, next) => {
       const itemIndx = cart.items.findIndex(
         (item) => item.product_id.toString() === req.body.itemId
       );
-      cart.items.splice(itemIndx, 1);
       const item_price =
-        cart.items[itemIndx].price * cart.items[itemIndx].quantity;
+      cart.items[itemIndx].price * cart.items[itemIndx].quantity;
       cart.totalPrice -= item_price;
+      cart.items.splice(itemIndx, 1);
       return cart.save();
     })
     .then((cart) => {
