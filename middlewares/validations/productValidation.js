@@ -1,4 +1,4 @@
-const { body, param, check } = require("express-validator");
+const { body, param, check, query } = require("express-validator");
 
 const validateUploadedImages = (value, { req }) => {
   if (req.files && Object.keys(req.files).length === 0) {
@@ -65,4 +65,8 @@ module.exports.deleteValidation = [
 
 module.exports.idValidation = [
   param("id").isMongoId().withMessage("Id must be mongoId"),
+];
+
+module.exports.searchValidation = [
+  query("search").isString().withMessage("search must be string"),
 ];
