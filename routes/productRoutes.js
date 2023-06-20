@@ -50,6 +50,10 @@ router
   );
 
 router
+  .route("/products/search")
+  .get(validations.searchValidation, validator, controller.searchForProduct);
+
+router
   .route("/products/:id")
   .get(validations.idValidation, validator, controller.getProductById);
 

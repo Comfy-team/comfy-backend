@@ -6,10 +6,12 @@ const Product = mongoose.model("products");
 const Brand = mongoose.model("brands");
 const Category = mongoose.model("categories");
 
+const dataPerPage = 12;
+
 module.exports.getAllProducts = (req, res, next) => {
   const filter = {};
   const sorting = {};
-  if (req.query.price != 0) {
+  if (req.query.price && req.query.price != 0) {
     filter.price = { $lte: +req.query.price };
   }
   if (req.query.brand && req.query.brand !== "all") {
@@ -18,20 +20,21 @@ module.exports.getAllProducts = (req, res, next) => {
   if (req.query.category && req.query.category !== "all") {
     filter.category = req.query.category;
   }
-  if (req.query.sort == -1 || req.query.sort == 1) {
+  if (req.query.sort && (req.query.sort == -1 || req.query.sort == 1)) {
     sorting.price = Number(req.query.sort);
   }
   Product.find(filter)
     .sort(sorting)
     .then(async (data) => {
       let maxPrice, minPrice;
-      const dataPerPage = 12;
-      const page = req.query.page;
+      // handle pagination
+      const page = req.query.page ? req.query.page : 1;
       const totalPages = Math.ceil(data.length / 12);
       const pageData = data.slice(
         (page - 1) * dataPerPage,
         (page - 1) * dataPerPage + dataPerPage
       );
+      // handle max and min price of products
       if (req.query.sort === 1) {
         minPrice = data[0];
         maxPrice = data[data.length - 1];
@@ -69,6 +72,35 @@ module.exports.getProductById = (req, res, next) => {
         throw new Error("product isn't found");
       }
       res.status(200).json(obj);
+    })
+    .catch((error) => next(error));
+};
+
+module.exports.searchForProduct = (req, res, next) => {
+  const regex = new RegExp(req.query.search, "ig");
+  Product.find()
+    .populate("brand")
+    .populate("category")
+    .then((data) => {
+      const arr = data.filter(
+        (ele) =>
+          regex.test(ele.name) ||
+          regex.test(ele.category.name) ||
+          regex.test(ele.brand.name) 
+      );
+      return arr;
+    })
+    .then((data) => {
+      const page = req.query.page ? req.query.page : 1;
+      const totalPages = Math.ceil(data.length / 12);
+      const pageData = data.slice(
+        (page - 1) * dataPerPage,
+        (page - 1) * dataPerPage + dataPerPage
+      );
+      res.status(200).json({
+        data: pageData,
+        totalPages,
+      });
     })
     .catch((error) => next(error));
 };
