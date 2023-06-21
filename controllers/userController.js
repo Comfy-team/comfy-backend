@@ -9,7 +9,6 @@ require("../models/userSchema");
 const Cart = mongoose.model("cart");
 const User = mongoose.model("users");
 
-
 module.exports.getAllUsers = (request, response, next) => {
   User.find({})
     .then((data) => response.status(200).json(data))
@@ -94,7 +93,17 @@ module.exports.deleteUser = (request, response, next) => {
 
 module.exports.getUserCart = (request, response, next) => {
   User.find({ _id: request.params.id }, { _id: 0, cart_id: 1 })
-    .populate({ path: "cart_id" })
+    .populate({
+      path: "cart_id",
+      populate: {
+        path: "items.product_id",
+        select: { name: 1, images: 1, brand: 1 },
+        populate: {
+          path: "brand",
+          select: { name: 1 },
+        },
+      },
+    })
     .then((data) => {
       response.status(200).json(data[0]["cart_id"]);
     })
@@ -107,18 +116,17 @@ module.exports.getUserOrders = (request, response, next) => {
       path: "order",
       select: { date: 1, userId: 1, cartId: 1 },
       populate: {
-        path:"cartId",
-        select:{totalPrice:1,items:1},
+        path: "cartId",
+        select: { totalPrice: 1, items: 1 },
         populate: {
-            path: "items.product_id",
-            select: { name: 1,images:1,brand:1},
-            populate:{
-                path:"brand",
-                select:{name:1}  
-            }
+          path: "items.product_id",
+          select: { name: 1, images: 1, brand: 1 },
+          populate: {
+            path: "brand",
+            select: { name: 1 },
+          },
         },
       },
-
     })
     .then((data) => {
       response.status(200).json(data[0]["order"]);
