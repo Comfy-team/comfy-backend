@@ -109,9 +109,7 @@ module.exports.addProduct = (req, res, next) => {
   const imagesArr = req.files.map((img) => {
     return { src: img.path };
   });
-  const colorsArr = req.body.colors.map((ele) => {
-    return { color: ele };
-  });
+  const colorsArr = [...new Set(req.body.colors)];
   let object = new Product({
     name: req.body.name,
     description: req.body.description,
