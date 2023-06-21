@@ -17,7 +17,7 @@ const port = process.env.port || 8080;
 const server = express();
 dotenv.config();
 mongoose
-.connect("mongodb://127.0.0.1:27017/comfy")
+.connect("mongodb+srv://admin_gmail_com:123_Admin_321@comfy.yixe6ry.mongodb.net/?retryWrites=true&w=majority")
 .then(() => {
   console.log("DB is connected");
   server.listen(port, () => {
