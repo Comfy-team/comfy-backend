@@ -2,7 +2,7 @@ const { query, param, body } = require("express-validator");
 
 exports.POSTValidation = [
   body("userId").isMongoId().withMessage("userId  must be objectId"),
-  body("cartId").isMongoId().withMessage("enter   object id in cartId "),
+  body("items").isArray().withMessage("enter   array "),
   body("phone")
     .isMobilePhone("ar-EG")
     .withMessage("Please enter a valid Egyptian phone number."),
