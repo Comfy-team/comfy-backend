@@ -16,21 +16,24 @@ exports.getAllOrders = (req, res, next) => {
 exports.postOrders = (req, res, next) => {
   const object = new Orders({
     userId: req.body.userId,
-    cartId: req.body.cartId,
     address: req.body.address,
     phone: req.body.phone,
+    items: req.body.items,
+    totalPrice: req.body.totalPrice,
   });
-  object.save().
-  then(async data => {
-    await User.updateOne({ _id: data.userId }, { $push: { order: data._id } });
-    return data;
-  })
+  object
+    .save()
+    .then(async data => {
+      await User.updateOne(
+        { _id: data.userId },
+        { $push: { order: data._id } }
+      );
+      return data;
+    })
     .then(data => {
       res.status(201).json(data);
     })
     .catch(error => next(error));
-
-  console.log(res);
 };
 
 exports.getSingleOrders = (req, res, next) => {
