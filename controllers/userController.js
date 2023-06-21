@@ -114,17 +114,13 @@ module.exports.getUserOrders = (request, response, next) => {
   User.find({ _id: request.params.id }, { _id: 0, order: 1 })
     .populate({
       path: "order",
-      select: { date: 1, userId: 1, cartId: 1 },
+      select: { date: 1, userId: 1, items: 1, totalPrice: 1 },
       populate: {
-        path: "cartId",
-        select: { totalPrice: 1, items: 1 },
+        path: "items.product_id",
+        select: { name: 1, images: 1, brand: 1 },
         populate: {
-          path: "items.product_id",
-          select: { name: 1, images: 1, brand: 1 },
-          populate: {
-            path: "brand",
-            select: { name: 1 },
-          },
+          path: "brand",
+          select: { name: 1 },
         },
       },
     })
