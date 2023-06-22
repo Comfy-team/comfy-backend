@@ -33,25 +33,28 @@ const addressSchema = new mongoose.Schema(
   },
   { _id: false }
 );
-const ItemSchema = new mongoose.Schema({
-  product_id: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "products",
-    required: true,
+const ItemSchema = new mongoose.Schema(
+  {
+    product_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "products",
+      required: true,
+    },
+    quantity: {
+      type: Number,
+      required: true,
+    },
+    color: {
+      type: String,
+      required: true,
+    },
+    price: {
+      type: Number,
+      required: true,
+    },
   },
-  quantity: {
-    type: Number,
-    required: true,
-  },
-  color: {
-    type: String,
-    required: true,
-  },
-  price: {
-    type: Number,
-    required: true,
-  },
-});
+  { _id: false }
+);
 const ordersSchema = new schema({
   userId: { type: mongoose.Types.ObjectId, ref: "users" },
   _id: { type: mongoose.Types.ObjectId, auto: true },
