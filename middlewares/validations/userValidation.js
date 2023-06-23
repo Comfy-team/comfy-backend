@@ -16,7 +16,7 @@ exports.updateValidation=[
     body('address.postalCode').optional().isInt().withMessage('postalCode Must be number'),
 ]
 exports.deleteValidation=[
-    body("id").isMongoId().withMessage('Invalid ObjectId'),
+    param("id").isMongoId().withMessage('Invalid ObjectId'),
 ]
 
 exports.idValidation=[

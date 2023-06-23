@@ -12,11 +12,13 @@ router
   .route("/users")
   .get(authMW.verifyToken,authMW.isAdmin,controller.getAllUsers)
   .patch(authMW.verifyToken,authMW.isUserOrAdmin,validations.updateValidation,validator,controller.updateUser)
-  .delete(authMW.verifyToken,authMW.isUserOfIdOrAdmin,validations.deleteValidation,validator,controller.deleteUser)
+  // .delete(authMW.verifyToken,authMW.isUserOfIdOrAdmin,validations.deleteValidation,validator,controller.deleteUser)
 
 router
   .route("/users/orders").get(authMW.verifyToken,authMW.isAdmin,validator,controller.getAllUsersOrders) 
 
+router
+  .route("/users/:id").delete(authMW.verifyToken,authMW.isUserOfIdOrAdmin,validations.deleteValidation,validator,controller.deleteUser)
 router
   .route("/users/:id")
   .get(authMW.verifyToken,authMW.isUserOfIdOrAdmin,validations.idValidation, validator, controller.getUserById);
