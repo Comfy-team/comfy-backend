@@ -5,6 +5,7 @@ require("../models/productSchema");
 const Product = mongoose.model("products");
 const Brand = mongoose.model("brands");
 const Category = mongoose.model("categories");
+const { getDataOfPage } = require("./paginationController");
 
 const dataPerPage = 12;
 
@@ -29,11 +30,7 @@ module.exports.getAllProducts = (req, res, next) => {
       let maxPrice, minPrice;
       // handle pagination
       const page = req.query.page ? req.query.page : 1;
-      const totalPages = Math.ceil(data.length / 12);
-      const pageData = data.slice(
-        (page - 1) * dataPerPage,
-        (page - 1) * dataPerPage + dataPerPage
-      );
+      const { totalPages, pageData } = getDataOfPage(data, page, dataPerPage);
       // handle max and min price of products
       if (req.query.sort === 1) {
         minPrice = data[0];
@@ -86,17 +83,13 @@ module.exports.searchForProduct = (req, res, next) => {
         (ele) =>
           regex.test(ele.name) ||
           regex.test(ele.category.name) ||
-          regex.test(ele.brand.name) 
+          regex.test(ele.brand.name)
       );
       return arr;
     })
     .then((data) => {
       const page = req.query.page ? req.query.page : 1;
-      const totalPages = Math.ceil(data.length / 12);
-      const pageData = data.slice(
-        (page - 1) * dataPerPage,
-        (page - 1) * dataPerPage + dataPerPage
-      );
+      const { totalPages, pageData } = getDataOfPage(data, page, dataPerPage);
       res.status(200).json({
         data: pageData,
         totalPages,
