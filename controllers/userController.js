@@ -5,13 +5,24 @@ const { populate } = require("../models/cartSchema");
 const saltRounds = process.env.saltRounds;
 const salt = bcrypt.genSaltSync(saltRounds);
 
+const { getDataOfPage } = require("./paginationController");
+const dataPerPage = 12;
+
 require("../models/userSchema");
 const Cart = mongoose.model("cart");
 const User = mongoose.model("users");
 
 module.exports.getAllUsers = (request, response, next) => {
   User.find({})
-    .then((data) => response.status(200).json(data))
+    .then((data) => {
+       // handle pagination
+       const page = request.query.page ? request.query.page : 1;
+       const { totalPages, pageData } = getDataOfPage(data, page, dataPerPage);
+      response.status(200).json({
+        data: pageData,
+        totalPages
+      })
+    })
     .catch((error) => next(error));
 };
 
@@ -78,12 +89,12 @@ module.exports.updateUser = (request, response, next) => {
 };
 
 module.exports.deleteUser = (request, response, next) => {
-  User.findOne({ _id: request.body.id })
+  User.findOne({ _id: request.params.id })
     .then((user) => {
       if (!user) {
         throw new Error("user not found with the specified _id value");
       }
-      return User.deleteOne({ _id: request.body.id });
+      return User.deleteOne({ _id: request.params.id });
     })
     .then((data) => {
       response.status(200).json(data);
