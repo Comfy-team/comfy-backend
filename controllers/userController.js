@@ -26,6 +26,29 @@ module.exports.getAllUsers = (request, response, next) => {
     .catch((error) => next(error));
 };
 
+module.exports.searchForUser= (request, response, next) => {
+  User.find()
+  .then((data)=>{
+    const arr = data.filter((ele) => {
+      return (
+        ele.email.toLowerCase().includes(request.query.search.toLowerCase()) ||
+        ele._id.toString().toLowerCase().includes(request.query.search.toLowerCase())
+      );
+    })
+    return arr;
+  }).then((data)=>{
+    const page = request.query.page ? request.query.page : 1;
+    const { totalPages, pageData } = getDataOfPage(data, page, dataPerPage);
+    response.status(200).json({
+      data: pageData,
+      totalPages,
+    });
+  }
+
+  )
+  .catch((error) => next(error))
+}
+
 module.exports.getUserById = (request, response, next) => {
   User.findOne({ _id: request.params.id })
     .then((object) => {
