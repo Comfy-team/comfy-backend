@@ -18,10 +18,13 @@ router
   .route("/users/orders").get(authMW.verifyToken,authMW.isAdmin,validator,controller.getAllUsersOrders) 
 
 router
-  .route("/users/:id").delete(authMW.verifyToken,authMW.isUserOfIdOrAdmin,validations.deleteValidation,validator,controller.deleteUser)
-router
+  .route("/users/search")
+  .get(validations.searchValidation,validator,controller.searchForUser)
+
+  router
   .route("/users/:id")
-  .get(authMW.verifyToken,authMW.isUserOfIdOrAdmin,validations.idValidation, validator, controller.getUserById);
+  .get(authMW.verifyToken,authMW.isUserOfIdOrAdmin,validations.idValidation, validator, controller.getUserById)
+  .delete(authMW.verifyToken,authMW.isUserOfIdOrAdmin,validations.deleteValidation,validator,controller.deleteUser)
 
 router
   .route("/users/:id/cart").get(authMW.verifyToken,authMW.isUserOfIdOrAdmin,validations.idValidation,validator,controller.getUserCart)  
