@@ -1,4 +1,4 @@
-const { body, param, check } = require("express-validator");
+const { body, param, check ,query} = require("express-validator");
 
 const validateUploadedImages = (value, { req }) => {
   if (!req.file || !req.file.mimetype.startsWith("image/")) {
@@ -24,7 +24,7 @@ module.exports.updateValidation = [
 ];
 
 module.exports.deleteValidation = [
-  body("_id").isMongoId().withMessage("Id must be mongoId"),
+  param("id").isMongoId().withMessage("Id must be mongoId"),
 ];
 
 module.exports.idValidation = [
@@ -34,3 +34,7 @@ module.exports.idValidation = [
 module.exports.CategoryValidation = [
   param("name").isString().withMessage("Category name must be string"),
 ];
+
+module.exports.searchValidation=[
+  query("search").isString().withMessage("search must be string"),
+]

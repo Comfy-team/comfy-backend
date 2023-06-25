@@ -81,9 +81,29 @@ module.exports.updateBrand = (req, res, next) => {
 };
 
 module.exports.deleteBrand = (req, res, next) => {
-  Brand.deleteOne({ _id: req.body._id })
+  Brand.deleteOne({ _id: req.params.id })
     .then((info) => {
       res.status(200).json(info);
     })
     .catch((error) => next(error));
 };
+
+module.exports.searchForUser = (req, res, next)=>{
+   Brand.find()
+   .then((data)=>{
+     const arr=data.filter((ele)=>{
+      return (
+        ele.name.toLowerCase().includes(req.query.search.toLowerCase()) ||
+        ele._id.toString().toLowerCase().includes(req.query.search.toLowerCase())
+      )
+     })
+     return arr;
+   }).then((data)=>{
+    const page = req.query.page ? req.query.page : 1;
+    const { totalPages, pageData } = getDataOfPage(data, page);
+    res.status(200).json({
+      data: pageData,
+      totalPages,
+    });
+   }).catch((error) => next(error))
+}
