@@ -60,6 +60,21 @@ module.exports.getAllProducts = (req, res, next) => {
     .catch((error) => next(error));
 };
 
+module.exports.getDashboardProducts = (req, res, next) => {
+  Product.find()
+    .populate("brand")
+    .populate("category")
+    .then((data) => {
+      const { totalPages, pageData } = getDataOfPage(data, req.query.page);
+      res.status(200).json({
+        data: pageData,
+        totalPages,
+        totalProducts: data.length,
+      });
+    })
+    .catch((error) => next(error));
+};
+
 module.exports.getProductById = (req, res, next) => {
   Product.findOne({ _id: req.params.id })
     .populate("brand")
