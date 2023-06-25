@@ -19,6 +19,20 @@ Router.route("/orders")
     OrderValidation.POSTValidation,
     validator,
     controller.postOrders
+  );
+
+Router.route("/orders/search").get(
+  OrderValidation.searchValidation,
+  validator,
+  controller.searchForOrder
+);
+Router.route("/orders/:id")
+  .get(
+    verifyToken,
+    isUserOfIdOrAdmin,
+    OrderValidation.IdValidation,
+    validator,
+    controller.getSingleOrders
   )
   .delete(
     verifyToken,
@@ -27,13 +41,5 @@ Router.route("/orders")
     validator,
     controller.deleteSingleOrders
   );
-
-Router.route("/orders/:id").get(
-  verifyToken,
-  isUserOfIdOrAdmin,
-  OrderValidation.IdValidation,
-  validator,
-  controller.getSingleOrders
-);
 
 module.exports = Router;
