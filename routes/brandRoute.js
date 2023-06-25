@@ -41,6 +41,12 @@ router
     validator,
     controller.updateBrand
   )
+  router
+  .route("/brands/search")
+  .get(validations.searchValidation,validator,controller.searchForUser) 
+   
+  router
+  .route("/brands/:id")
   .delete(
     verifyToken,
     isAdmin,
