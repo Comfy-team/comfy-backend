@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 
 require("../models/ordersSchema");
+const { getDataOfPage } = require("./paginationController");
+const dataPerPage = 5;
 
 const Orders = mongoose.model("orders");
 const User = mongoose.model("users");
@@ -8,7 +10,32 @@ const User = mongoose.model("users");
 exports.getAllOrders = (req, res, next) => {
   Orders.find({})
     .then(data => {
-      res.status(200).json({ data });
+      // handle pagination
+      const page = req.query.page ? req.query.page : 1;
+      const { totalPages, pageData } = getDataOfPage(data, page, dataPerPage);
+      res.status(200).json({ data: pageData, totalPages });
+    })
+    .catch(error => next(error));
+};
+
+module.exports.searchForOrder = (req, res, next) => {
+  Orders.find({})
+    .then(data => {
+      const arr = data.filter(ele => {
+        return ele._id
+          .toString()
+          .toLowerCase()
+          .includes(req.query.search.toLowerCase());
+      });
+      return arr;
+    })
+    .then(data => {
+      const page = req.query.page ? req.query.page : 1;
+      const { totalPages, pageData } = getDataOfPage(data, page, dataPerPage);
+      res.status(200).json({
+        data: pageData,
+        totalPages,
+      });
     })
     .catch(error => next(error));
 };
@@ -49,12 +76,12 @@ exports.getSingleOrders = (req, res, next) => {
 };
 
 exports.deleteSingleOrders = (req, res, next) => {
-  Orders.findOne({ _id: req.body.id })
+  Orders.findOne({ _id: req.params.id })
     .then(Order => {
       if (!Order) {
         throw new Error("Order not found with the specified _id value");
       }
-      return Order.deleteOne({ _id: req.body.id });
+      return Order.deleteOne({ _id: req.params.id });
     })
     .then(data => {
       res.status(200).json(data);
