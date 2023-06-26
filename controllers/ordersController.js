@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 
 const { getDataOfPage } = require("./paginationController");
-const dataPerPage = 12;
 require("../models/productSchema");
 
 require("../models/ordersSchema");
@@ -14,8 +13,10 @@ exports.getAllOrders = (req, res, next) => {
     .then(data => {
       // handle pagination
       const page = req.query.page ? req.query.page : 1;
-      const { totalPages, pageData } = getDataOfPage(data, page, dataPerPage);
-      res.status(200).json({ data: pageData, totalPages });
+      const { totalPages, pageData } = getDataOfPage(data, page);
+      res
+        .status(200)
+        .json({ data: pageData, totalPages, totalOrders: data.length });
     })
     .catch(error => next(error));
 };
@@ -33,10 +34,11 @@ module.exports.searchForOrder = (req, res, next) => {
     })
     .then(data => {
       const page = req.query.page ? req.query.page : 1;
-      const { totalPages, pageData } = getDataOfPage(data, page, dataPerPage);
+      const { totalPages, pageData } = getDataOfPage(data, page);
       res.status(200).json({
         data: pageData,
         totalPages,
+        totalOrders: data.length,
       });
     })
     .catch(error => next(error));
