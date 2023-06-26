@@ -1,15 +1,14 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
-const { populate } = require("../models/cartSchema");
+
 
 const saltRounds = process.env.saltRounds;
 const salt = bcrypt.genSaltSync(saltRounds);
 
 const { getDataOfPage } = require("./paginationController");
-const dataPerPage = 12;
+
 
 require("../models/userSchema");
-const Cart = mongoose.model("cart");
 const User = mongoose.model("users");
 
 module.exports.getAllUsers = (request, response, next) => {
@@ -17,10 +16,11 @@ module.exports.getAllUsers = (request, response, next) => {
     .then((data) => {
        // handle pagination
        const page = request.query.page ? request.query.page : 1;
-       const { totalPages, pageData } = getDataOfPage(data, page, dataPerPage);
+       const { totalPages, pageData } = getDataOfPage(data, page);
       response.status(200).json({
         data: pageData,
-        totalPages
+        totalPages,
+        totalUsers:data.length
       })
     })
     .catch((error) => next(error));
@@ -38,10 +38,11 @@ module.exports.searchForUser= (request, response, next) => {
     return arr;
   }).then((data)=>{
     const page = request.query.page ? request.query.page : 1;
-    const { totalPages, pageData } = getDataOfPage(data, page, dataPerPage);
+    const { totalPages, pageData } = getDataOfPage(data, page);
     response.status(200).json({
       data: pageData,
       totalPages,
+      totalUsers:data.length
     });
   }
 
