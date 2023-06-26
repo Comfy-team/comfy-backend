@@ -158,7 +158,7 @@ module.exports.updateProduct = (req, res, next) => {
       return { src: img.path };
     });
   }
-  Product.findOne({ _id: req.body._id }, { category: 1, brand: 1 })
+  Product.findOne({ _id: req.body._id }, { category: 1, brand: 1, images: 1 })
     .then((obj) => {
       // check if brand was updated
       if (req.body.brand != obj.brand.toString()) {
@@ -191,6 +191,24 @@ module.exports.updateProduct = (req, res, next) => {
           .then(() => true)
           .catch((error) => next(error));
       }
+      // check if old images were modified
+      if (req.body.images) {
+        if (Array.isArray(req.body.images)) {
+          const updatedImages = obj.images.filter((oldImg) => {
+            return (
+              req.body.images.findIndex(
+                (img) => JSON.parse(img)._id == oldImg._id
+              ) !== -1
+            );
+          });
+          imagesArr.push(...updatedImages);
+        } else {
+          const oldImg = obj.images.find(
+            (ele) => ele._id == JSON.parse(req.body.images)._id
+          );
+          imagesArr.push(oldImg);
+        }
+      }
     })
     .then(() => {
       return Product.updateOne(
@@ -204,18 +222,18 @@ module.exports.updateProduct = (req, res, next) => {
 
 module.exports.deleteProduct = (req, res, next) => {
   Brand.updateOne(
-    { _id: req.body.brand },
-    { $pull: { products: req.body._id } }
+    { _id: req.query.brand },
+    { $pull: { products: req.query._id } }
   )
     .then(() => true)
     .catch((error) => next(error));
   Category.updateOne(
-    { _id: req.body.category },
-    { $pull: { products_id: req.body._id } }
+    { _id: req.query.category },
+    { $pull: { products_id: req.query._id } }
   )
     .then(() => true)
     .catch((error) => next(error));
-  Product.deleteOne({ _id: req.body._id })
+  Product.deleteOne({ _id: req.query._id })
     .then((info) => {
       res.status(200).json(info);
     })
