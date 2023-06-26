@@ -1,7 +1,7 @@
 const { body, param, check, query } = require("express-validator");
 
 const validateUploadedImages = (value, { req }) => {
-  if (req.files && Object.keys(req.files).length === 0) {
+  if (req.files && Object.keys(req.files).length === 0 && !req.body.images) {
     throw new Error("No image file uploaded");
   }
   return true;
@@ -60,7 +60,7 @@ module.exports.updateValidation = [
 ];
 
 module.exports.deleteValidation = [
-  body("_id").isMongoId().withMessage("Id must be mongoId"),
+  query("_id").isMongoId().withMessage("Id must be mongoId")
 ];
 
 module.exports.idValidation = [
