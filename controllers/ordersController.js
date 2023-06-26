@@ -1,10 +1,13 @@
 const mongoose = require("mongoose");
 
-require("../models/ordersSchema");
 const { getDataOfPage } = require("./paginationController");
 const dataPerPage = 5;
+require("../models/productSchema");
 
+// const Product = mongoose.model("products");
+require("../models/ordersSchema");
 const Orders = mongoose.model("orders");
+const Product = mongoose.model("products");
 const User = mongoose.model("users");
 
 exports.getAllOrders = (req, res, next) => {
@@ -74,13 +77,28 @@ exports.getSingleOrders = (req, res, next) => {
     })
     .catch(error => next(error));
 };
-
 exports.deleteSingleOrders = (req, res, next) => {
   Orders.findOne({ _id: req.params.id })
     .then(Order => {
       if (!Order) {
         throw new Error("Order not found with the specified _id value");
       }
+      Order.items.forEach(items => {
+        Product.findOneAndUpdate(
+          { _id: items.product_id },
+          { $inc: { stock: items.quantity } }
+        )
+          .then(product => {
+            if (!product) {
+              throw new Error(
+                `product not found with this specific _id value :${item.product}`
+              );
+            }
+          })
+          .catch(error => {
+            throw new Error(`error updating product stock ${error.message}`);
+          });
+      });
       return Order.deleteOne({ _id: req.params.id });
     })
     .then(data => {
