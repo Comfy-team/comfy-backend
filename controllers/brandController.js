@@ -104,6 +104,7 @@ module.exports.searchForUser = (req, res, next)=>{
     res.status(200).json({
       data: pageData,
       totalPages,
+      totalBrands: data.length,
     });
    }).catch((error) => next(error))
 }
