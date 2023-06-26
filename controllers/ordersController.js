@@ -1,10 +1,9 @@
 const mongoose = require("mongoose");
 
 const { getDataOfPage } = require("./paginationController");
-const dataPerPage = 5;
+const dataPerPage = 12;
 require("../models/productSchema");
 
-// const Product = mongoose.model("products");
 require("../models/ordersSchema");
 const Orders = mongoose.model("orders");
 const Product = mongoose.model("products");
@@ -43,27 +42,39 @@ module.exports.searchForOrder = (req, res, next) => {
     .catch(error => next(error));
 };
 
-exports.postOrders = (req, res, next) => {
-  const object = new Orders({
-    userId: req.body.userId,
-    address: req.body.address,
-    phone: req.body.phone,
-    items: req.body.items,
-    totalPrice: req.body.totalPrice,
-  });
-  object
-    .save()
-    .then(async data => {
-      await User.updateOne(
-        { _id: data.userId },
-        { $push: { order: data._id } }
-      );
-      return data;
-    })
-    .then(data => {
-      res.status(201).json(data);
-    })
-    .catch(error => next(error));
+exports.postOrders = async (req, res, next) => {
+  try {
+    const order = new Orders({
+      userId: req.body.userId,
+      address: req.body.address,
+      phone: req.body.phone,
+      items: req.body.items,
+      totalPrice: req.body.totalPrice,
+    });
+    for (const item of order.items) {
+      const product = await Product.findOne({ _id: item.product_id });
+      if (!product) {
+        throw new Error(`Product not found with _id: ${item.product_id}`);
+      }
+
+      if (product.stock < item.quantity) {
+        throw new Error(`Insufficient stock for product: ${product.name}`);
+      }
+      product.stock -= item.quantity;
+      await product.save();
+    }
+
+    const savedOrder = await order.save();
+
+    await User.updateOne(
+      { _id: savedOrder.userId },
+      { $push: { order: savedOrder._id } }
+    );
+
+    res.status(201).json(savedOrder);
+  } catch (error) {
+    next(error);
+  }
 };
 
 exports.getSingleOrders = (req, res, next) => {
