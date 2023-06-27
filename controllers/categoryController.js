@@ -1,13 +1,14 @@
 const mongoose = require("mongoose");
 require("../models/categorySchema");
 
+const { getDataOfPage } = require("./paginationController");
 const Category = mongoose.model("categories");
 
 module.exports.getAllCategory = (request, response, next) => {
     Category.find({})
         .then((data) => {
             // handle pagination
-            const page = req.query.page ? req.query.page : 1;
+            const page = request.query.page ? request.query.page : 1;
             const { totalPages, pageData } = getDataOfPage(data, page);
             response.status(200).json({
                 data: pageData,
@@ -66,5 +67,27 @@ module.exports.deleteCategory = (request, response, next) => {
         }).then(data => {
             response.status(200).json(data);
         }).catch(error => next(error));
-
 }
+
+module.exports.searchForCategory = (req, res, next) => {
+    Category.find()
+      .then((data) => {
+        const arr = data.filter((ele) => {
+          return (
+            ele.name.toLowerCase().includes(req.query.search.toLowerCase()) ||
+            ele._id.toString().toLowerCase().includes(req.query.search.toLowerCase())
+          );
+        });
+        return arr;
+      })
+      .then((data) => {
+        const page = req.query.page ? req.query.page : 1;
+        const { totalPages, pageData } = getDataOfPage(data, page);
+        res.status(200).json({
+          data: pageData,
+          totalPages,
+          totalCategories: data.length,
+        });
+      })
+      .catch((error) => next(error));
+  };
