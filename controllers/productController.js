@@ -108,7 +108,7 @@ module.exports.searchForProduct = (req, res, next) => {
       res.status(200).json({
         data: pageData,
         totalPages,
-        totalResults: data.length
+        totalResults: data.length,
       });
     })
     .catch((error) => next(error));
@@ -162,7 +162,7 @@ module.exports.updateProduct = (req, res, next) => {
   Product.findOne({ _id: req.body._id }, { category: 1, brand: 1, images: 1 })
     .then((obj) => {
       // check if brand was updated
-      if (req.body.brand != obj.brand.toString()) {
+      if (req.body.brand) {
         // remove product from old brand
         Brand.updateOne({ _id: obj.brand }, { $pull: { products: obj._id } })
           .then(() => true)
@@ -176,7 +176,7 @@ module.exports.updateProduct = (req, res, next) => {
           .catch((error) => next(error));
       }
       // check if category was updated
-      if (req.body.category !== obj.category) {
+      if (req.body.category) {
         // remove product from old category
         Category.updateOne(
           { _id: obj.category },
