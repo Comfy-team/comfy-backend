@@ -14,6 +14,7 @@ module.exports.getAllCategory = (request, response, next) => {
                 data: pageData,
                 totalPages,
                 totalCategories: data.length,
+                allData:data
             });
         })
         .catch((error) => next(error));
