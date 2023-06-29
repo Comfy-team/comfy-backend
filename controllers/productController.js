@@ -185,7 +185,7 @@ module.exports.updateProduct = (req, res, next) => {
           .catch((error) => next(error));
         // add product to updated category
         Category.updateOne(
-          { _id: req.body.brand },
+          { _id: req.body.category },
           { $push: { products_id: obj._id } }
         )
           .then(() => true)
