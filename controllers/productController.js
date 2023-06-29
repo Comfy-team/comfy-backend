@@ -108,6 +108,7 @@ module.exports.searchForProduct = (req, res, next) => {
       res.status(200).json({
         data: pageData,
         totalPages,
+        totalResults: data.length
       });
     })
     .catch((error) => next(error));
