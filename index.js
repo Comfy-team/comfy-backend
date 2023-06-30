@@ -13,7 +13,7 @@ const categoryRoutes = require("./routes/categoryRoute");
 const productRoutes = require("./routes/productRoutes");
 const registerRoutes =require("./routes/register")
 
-const port = process.env.port || 8080;
+const port = process.env.PORT || 8080;
 const server = express();
 dotenv.config();
 mongoose
