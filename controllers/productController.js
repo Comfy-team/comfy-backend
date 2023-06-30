@@ -39,15 +39,12 @@ module.exports.getAllProducts = (req, res, next) => {
         maxPrice = data[0];
         minPrice = data[data.length - 1];
       } else {
-        minPrice = await Product.find(filter, { price: 1 })
+        [minPrice, maxPrice] = await Product.find(filter, { price: 1 })
           .sort({ price: 1 })
-          .limit(1)
-          .then((data) => (data[0] ? data[0].price : 0))
-          .catch((error) => next(error));
-        maxPrice = await Product.find(filter, { price: 1 })
-          .sort({ price: -1 })
-          .limit(1)
-          .then((data) => (data[0] ? data[0].price : 0))
+          .then((data) => [
+            data[0] ? data[0].price : 0,
+            data[0] ? data[data.length - 1].price : 0,
+          ])
           .catch((error) => next(error));
       }
       res.status(200).json({
