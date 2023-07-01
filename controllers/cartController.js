@@ -57,7 +57,7 @@ exports.updateProductInCart = (req, res, next) => {
   Cart.findOne({ _id: req.params.cartId })
     .then((cart) => {
       const item = cart.items.find(
-        (item) => item.product_id.toString() === req.body.itemId
+        (item) => item.product_id.toString() === req.body.itemId && item.color === req.body.color
       );
       item.quantity = req.body.quantity;
       cart.totalPrice = cart.items.reduce((total, item) => {
@@ -80,7 +80,7 @@ module.exports.deleteProductFromCart = (req, res, next) => {
         (item) => item.product_id.toString() === req.body.itemId
       );
       const item_price =
-      cart.items[itemIndx].price * cart.items[itemIndx].quantity;
+        cart.items[itemIndx].price * cart.items[itemIndx].quantity;
       cart.totalPrice -= item_price;
       cart.items.splice(itemIndx, 1);
       return cart.save();
