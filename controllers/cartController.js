@@ -80,7 +80,7 @@ module.exports.deleteProductFromCart = (req, res, next) => {
         (item) => item.product_id.toString() === req.body.itemId
       );
       const item_price =
-      cart.items[itemIndx].price * cart.items[itemIndx].quantity;
+        cart.items[itemIndx].price * cart.items[itemIndx].quantity;
       cart.totalPrice -= item_price;
       cart.items.splice(itemIndx, 1);
       return cart.save();
