@@ -18,9 +18,7 @@ const server = express();
 dotenv.config();
 
 mongoose
-  .connect(
-    process.env.MONGODB_URI
-  )
+  .connect(process.env.MONGODB_URI)
   .then(() => {
     console.log("DB is connected");
     server.listen(port, () => {
@@ -29,7 +27,12 @@ mongoose
   })
   .catch((error) => console.log("Error in DB " + error));
 
-server.use(cors({ credentials: true, origin: "http://localhost:3000" }));
+server.use(
+  cors({
+    credentials: true,
+    origin: ["http://localhost:3000", "https://comfy-frontend.vercel.app/"],
+  })
+);
 
 // logging MW
 server.use(morgan("short"));
