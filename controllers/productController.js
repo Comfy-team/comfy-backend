@@ -39,15 +39,12 @@ module.exports.getAllProducts = (req, res, next) => {
         maxPrice = data[0];
         minPrice = data[data.length - 1];
       } else {
-        minPrice = await Product.find(filter, { price: 1 })
+        [minPrice, maxPrice] = await Product.find(filter, { price: 1 })
           .sort({ price: 1 })
-          .limit(1)
-          .then((data) => (data[0] ? data[0].price : 0))
-          .catch((error) => next(error));
-        maxPrice = await Product.find(filter, { price: 1 })
-          .sort({ price: -1 })
-          .limit(1)
-          .then((data) => (data[0] ? data[0].price : 0))
+          .then((data) => [
+            data[0] ? data[0].price : 0,
+            data[0] ? data[data.length - 1].price : 0,
+          ])
           .catch((error) => next(error));
       }
       res.status(200).json({
@@ -108,6 +105,7 @@ module.exports.searchForProduct = (req, res, next) => {
       res.status(200).json({
         data: pageData,
         totalPages,
+        totalResults: data.length,
       });
     })
     .catch((error) => next(error));
@@ -161,7 +159,7 @@ module.exports.updateProduct = (req, res, next) => {
   Product.findOne({ _id: req.body._id }, { category: 1, brand: 1, images: 1 })
     .then((obj) => {
       // check if brand was updated
-      if (req.body.brand != obj.brand.toString()) {
+      if (req.body.brand) {
         // remove product from old brand
         Brand.updateOne({ _id: obj.brand }, { $pull: { products: obj._id } })
           .then(() => true)
@@ -175,7 +173,7 @@ module.exports.updateProduct = (req, res, next) => {
           .catch((error) => next(error));
       }
       // check if category was updated
-      if (req.body.category !== obj.category) {
+      if (req.body.category) {
         // remove product from old category
         Category.updateOne(
           { _id: obj.category },
@@ -185,7 +183,7 @@ module.exports.updateProduct = (req, res, next) => {
           .catch((error) => next(error));
         // add product to updated category
         Category.updateOne(
-          { _id: req.body.brand },
+          { _id: req.body.category },
           { $push: { products_id: obj._id } }
         )
           .then(() => true)

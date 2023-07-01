@@ -11,22 +11,28 @@ const authenticationRoute = require("./routes/authenticationRoute");
 const brandRoutes = require("./routes/brandRoute");
 const categoryRoutes = require("./routes/categoryRoute");
 const productRoutes = require("./routes/productRoutes");
-const registerRoutes =require("./routes/register")
+const registerRoutes = require("./routes/register");
 
-const port = process.env.port || 8080;
+const port = process.env.PORT || 8080;
 const server = express();
 dotenv.config();
-mongoose
-.connect("mongodb+srv://admin_gmail_com:123_Admin_321@comfy.yixe6ry.mongodb.net/?retryWrites=true&w=majority")
-.then(() => {
-  console.log("DB is connected");
-  server.listen(port, () => {
-    console.log("Up and listenin to port", port);
-  });
-})
-.catch((error) => console.log("Error in DB " + error));
 
-server.use(cors());
+mongoose
+  .connect(process.env.MONGODB_URI)
+  .then(() => {
+    console.log("DB is connected");
+    server.listen(port, () => {
+      console.log("Up and listenin to port", port);
+    });
+  })
+  .catch((error) => console.log("Error in DB " + error));
+
+server.use(
+  cors({
+    credentials: true,
+    origin: ["http://localhost:3000", "https://comfy-frontend.vercel.app"],
+  })
+);
 
 // logging MW
 server.use(morgan("short"));
@@ -38,7 +44,7 @@ server.use(registerRoutes);
 // authentication
 server.use(authenticationRoute);
 
-server.use("/uploads", express.static('uploads'))
+server.use("/uploads", express.static("uploads"));
 
 // routes
 server.use(productRoutes);

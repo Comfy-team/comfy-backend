@@ -41,6 +41,10 @@ router
   .delete(authMW.verifyToken,authMW.isAdmin,validations.deleteValidation,validator,controller.deleteCategory)
 
   router
+  .route("/categories/search")
+  .get(validations.searchValidation,validator,controller.searchForCategory) 
+   
+  router
   .route("/categories/:id")
   .get(validations.idValidation, validator, controller.getCategoryById);
 
