@@ -19,7 +19,7 @@ dotenv.config();
 
 mongoose
   .connect(
-    "mongodb+srv://admin_gmail_com:123_Admin_321@comfy.yixe6ry.mongodb.net/?retryWrites=true&w=majority"
+    process.env.MONGODB_URI
   )
   .then(() => {
     console.log("DB is connected");
