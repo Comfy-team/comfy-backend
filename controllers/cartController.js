@@ -57,7 +57,7 @@ exports.updateProductInCart = (req, res, next) => {
   Cart.findOne({ _id: req.params.cartId })
     .then((cart) => {
       const item = cart.items.find(
-        (item) => item.product_id.toString() === req.body.itemId
+        (item) => item.product_id.toString() === req.body.itemId && item.color === req.body.color
       );
       item.quantity = req.body.quantity;
       cart.totalPrice = cart.items.reduce((total, item) => {
