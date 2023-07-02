@@ -132,7 +132,7 @@ module.exports.getUserCart = (request, response, next) => {
       path: "cart_id",
       populate: {
         path: "items.product_id",
-        select: { name: 1, images: 1, brand: 1 },
+        select: { name: 1, images: 1, brand: 1, stock:1 },
         populate: {
           path: "brand",
           select: { name: 1 },
