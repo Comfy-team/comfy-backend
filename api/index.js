@@ -21,7 +21,7 @@ const morgan = require("morgan");
 const dotenv = require("dotenv");
 const cors = require("cors");
 
-// const cartRoutes = require("./routes/cartRoute");
+const cartRoutes = require("./routes/cartRoute");
 const userRoutes = require("./routes/userRoutes");
 const orderRoutes = require("./routes/ordersRoute");
 const authenticationRoute = require("./routes/authenticationRoute");
