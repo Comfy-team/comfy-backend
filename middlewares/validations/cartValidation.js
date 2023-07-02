@@ -16,5 +16,6 @@ exports.updateProduct = [
 
 exports.deleteProduct = [
   body("itemId").isMongoId().withMessage("Invalid item ID"),
+  body("color").isString().withMessage("Color must be a string"),
 ];
 
