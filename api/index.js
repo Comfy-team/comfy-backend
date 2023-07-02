@@ -31,20 +31,19 @@ const productRoutes = require("./routes/productRoutes");
 const registerRoutes = require("./routes/register");
 
 const port = process.env.PORT || 8080;
-const server = express();
 dotenv.config();
 
 mongoose
   .connect(process.env.MONGODB_URI)
   .then(() => {
     console.log("DB is connected");
-    server.listen(port, () => {
+    app.listen(port, () => {
       console.log("Up and listenin to port", port);
     });
   })
   .catch((error) => console.log("Error in DB " + error));
 
-server.use(
+app.use(
   cors({
     credentials: true,
     origin: ["http://localhost:3000", "https://comfy-frontend.vercel.app"],
@@ -52,32 +51,32 @@ server.use(
 );
 
 // logging MW
-server.use(morgan("short"));
+app.use(morgan("short"));
 
-server.use(express.json());
+app.use(express.json());
 
-server.use(registerRoutes);
+app.use(registerRoutes);
 
 // authentication
-server.use(authenticationRoute);
+app.use(authenticationRoute);
 
-server.use("/uploads", express.static("uploads"));
+app.use("/uploads", express.static("uploads"));
 
 // routes
-server.use(productRoutes);
-server.use(brandRoutes);
-server.use(userRoutes);
-server.use(categoryRoutes);
-server.use(orderRoutes);
-server.use(cartRoutes);
+app.use(productRoutes);
+app.use(brandRoutes);
+app.use(userRoutes);
+app.use(categoryRoutes);
+app.use(orderRoutes);
+app.use(cartRoutes);
 
 // not found MW
-server.use((req, res, next) => {
+app.use((req, res, next) => {
   res.status(404).json({ msg: "not found" });
 });
 
 // error MW
-server.use((error, req, res, next) => {
+app.use((error, req, res, next) => {
   res.status(error.status || 500).json({ msg: "" + error });
   // res.status(500).json({ message: "Internal sever error" });
 });
