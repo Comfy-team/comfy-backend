@@ -77,7 +77,7 @@ module.exports.deleteProductFromCart = (req, res, next) => {
     .populate("items.product")
     .then((cart) => {
       const itemIndx = cart.items.findIndex(
-        (item) => item.product_id.toString() === req.body.itemId
+        (item) => item.product_id.toString() === req.body.itemId && item.color === req.body.color
       );
       const item_price =
         cart.items[itemIndx].price * cart.items[itemIndx].quantity;
