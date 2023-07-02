@@ -10,6 +10,7 @@ const { getDataOfPage } = require("./paginationController");
 
 require("../models/userSchema");
 const User = mongoose.model("users");
+const Cart = mongoose.model("cart");
 
 module.exports.getAllUsers = (request, response, next) => {
   User.find({})
@@ -113,12 +114,14 @@ module.exports.updateUser = (request, response, next) => {
 };
 
 module.exports.deleteUser = (request, response, next) => {
-  User.findOne({ _id: request.params.id })
+  // find user if it exist delete it if not show message that user not exist
+  User.findOneAndDelete({ _id: request.params.id })
     .then((user) => {
       if (!user) {
         throw new Error("user not found with the specified _id value");
       }
-      return User.deleteOne({ _id: request.params.id });
+      // delete the user cart 
+      return Cart.deleteOne({ _id: user.cart_id });
     })
     .then((data) => {
       response.status(200).json(data);
