@@ -3,8 +3,8 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 
 const User = mongoose.model("users");
-const saltRounds = process.env.saltRounds;
-const salt = bcrypt.genSaltSync(saltRounds);
+// const saltRounds = process.env.saltRounds;
+// const salt = bcrypt.genSaltSync(saltRounds);
 
 module.exports.login = (req, res, next) => {
   let token;
