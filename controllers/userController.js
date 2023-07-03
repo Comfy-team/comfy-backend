@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 
 
-const saltRounds = process.env.saltRounds;
+const saltRounds = +process.env.saltRounds;
 const salt = bcrypt.genSaltSync(saltRounds);
 
 const { getDataOfPage } = require("./paginationController");
