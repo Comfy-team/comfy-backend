@@ -112,6 +112,18 @@ exports.deleteSingleOrders = (req, res, next) => {
             throw new Error(`error updating product stock ${error.message}`);
           });
       });
+      User.findOneAndUpdate(
+        { _id: Order.userId },
+        { $pull: { order: Order._id } }
+      )
+        .then(data => {
+          // console.log(data);
+        })
+        .catch(error => {
+          return Promise.reject(
+            new Error(`error delete order from user ${error.message}`)
+          );
+        });
       return Order.deleteOne({ _id: req.params.id });
     })
     .then(data => {
