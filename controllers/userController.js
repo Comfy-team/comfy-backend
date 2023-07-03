@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 
 
 const saltRounds = process.env.saltRounds;
-const salt = bcrypt.genSaltSync(saltRounds);
+// const salt = bcrypt.genSaltSync(saltRounds);
 
 const { getDataOfPage } = require("./paginationController");
 
@@ -67,7 +67,7 @@ module.exports.updateUser = (request, response, next) => {
 
   let password;
   if (request.body.password != undefined) {
-    password = bcrypt.hashSync(request.body.password, salt);
+    // password = bcrypt.hashSync(request.body.password, salt);
   }
 
   User.findOne({ _id: request.body.id })
