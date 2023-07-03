@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 
 const bcrypt = require("bcrypt");
-const saltRounds = process.env.saltRounds
-const salt = bcrypt.genSaltSync(saltRounds);
+// const saltRounds = process.env.saltRounds
+// const salt = bcrypt.genSaltSync(saltRounds);
 
 const User = mongoose.model("users");
 const Cart = mongoose.model('cart');
@@ -10,7 +10,7 @@ const Cart = mongoose.model('cart');
 module.exports.register=(request,response,next)=>{
     let object = new User({
         fullName: request.body.fullName,
-        password: bcrypt.hashSync(request.body.password, salt),
+        // password: bcrypt.hashSync(request.body.password, salt),
         email: request.body.email,
         phone: request.body.phone || "",
         address:  request.body.address,
