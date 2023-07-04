@@ -30,7 +30,7 @@ mongoose
 server.use(
   cors({
     credentials: true,
-    origin: ["http://localhost:3000", "https://comfy-frontend.vercel.app", "https://comfy-team.github.io/comfy"],
+    origin: ["http://localhost:3000", "https://comfy-frontend.vercel.app", "https://comfy-team.github.io"],
   })
 );
 
