@@ -23,7 +23,7 @@ module.exports.getCartById = (req, res, next) => {
 };
 
 exports.postProductToCart = (req, res, next) => {
-  const { product_id, color, price } = req.body;
+  const { product_id, color, price, discount } = req.body;
   const { id } = req.params;
   const quantity = 1;
 
@@ -39,10 +39,10 @@ exports.postProductToCart = (req, res, next) => {
       if (existingProductIndex !== -1) {
         cart.items[existingProductIndex].quantity += quantity;
       } else {
-        cart.items.push({ product_id: product_id, quantity, color, price });
+        cart.items.push({ product_id: product_id, quantity, color, price, discount });
       }
       cart.totalPrice = cart.items.reduce((total, item) => {
-        const item_price = item.price * item.quantity;
+        const item_price = item.price * item.quantity * (1 - (item.discount) / 100);
         return total + item_price;
       }, 0);
       return cart.save();
@@ -61,7 +61,7 @@ exports.updateProductInCart = (req, res, next) => {
       );
       item.quantity = req.body.quantity;
       cart.totalPrice = cart.items.reduce((total, item) => {
-        const item_price = item.price * item.quantity;
+        const item_price = item.price * item.quantity * (1 - (item.discount) / 100);
         return total + item_price;
       }, 0);
       return cart.save();
@@ -80,7 +80,7 @@ module.exports.deleteProductFromCart = (req, res, next) => {
         (item) => item.product_id.toString() === req.body.itemId && item.color === req.body.color
       );
       const item_price =
-        cart.items[itemIndx].price * cart.items[itemIndx].quantity;
+        cart.items[itemIndx].price * (1 - (cart.items[itemIndx].discount) / 100) * cart.items[itemIndx].quantity;
       cart.totalPrice -= item_price;
       cart.items.splice(itemIndx, 1);
       return cart.save();
@@ -106,7 +106,7 @@ module.exports.emptyCart = (req, res, next) => {
       cart.totalPrice = 0;
 
       for (const item of cart.items) {
-        cart.totalPrice += item.price * item.quantity;
+        cart.totalPrice += item.price * item.quantity*(1 - (item.discount) / 100);
       }
 
       return cart.save();
