@@ -6,6 +6,7 @@ exports.postProduct = [
   body("product_id").isMongoId().withMessage("Invalid ObjectId"),
   body("color").isString().withMessage("Color must be a string"),
   body("price").isNumeric().withMessage("Price must be a number"),
+  body("discount").isNumeric().withMessage("Discount must be a number")
 ];
 
 exports.updateProduct = [
