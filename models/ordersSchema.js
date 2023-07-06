@@ -53,7 +53,7 @@ const ItemSchema = new mongoose.Schema(
       required: true,
     },
   },
-  { _id: false }
+  { _id: true }
 );
 const ordersSchema = new schema({
   userId: { type: mongoose.Types.ObjectId, ref: "users" },
