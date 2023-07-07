@@ -155,7 +155,7 @@ module.exports.getUserOrders = (request, response, next) => {
       select: { date: 1, userId: 1, items: 1, totalPrice: 1 },
       populate: {
         path: "items.product_id",
-        select: { name: 1, images: 1, brand: 1 },
+        select: { name: 1, images: 1, brand: 1, discount:1 },
         populate: {
           path: "brand",
           select: { name: 1 },
