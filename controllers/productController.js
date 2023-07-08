@@ -115,15 +115,13 @@ module.exports.addProduct = (req, res, next) => {
   const imagesArr = req.files.map((img) => {
     return { src: img.path };
   });
-  const colorsArr = [...new Set(req.body.colors)];
   let object = new Product({
     name: req.body.name,
     description: req.body.description,
     price: req.body.price,
     images: imagesArr,
-    colors: colorsArr,
+    colors: req.body.colors.map((ele) => JSON.parse(ele)),
     discount: req.body.discount,
-    stock: req.body.stock,
     category: req.body.category,
     brand: req.body.brand,
   });
@@ -156,6 +154,9 @@ module.exports.updateProduct = (req, res, next) => {
       return { src: img.path };
     });
   }
+  const parsedColors = req.body.colors.map((obj) =>
+    typeof obj === "object" ? obj : JSON.parse(obj)
+  );
   Product.findOne({ _id: req.body._id }, { category: 1, brand: 1, images: 1 })
     .then((obj) => {
       // check if brand was updated
@@ -207,11 +208,13 @@ module.exports.updateProduct = (req, res, next) => {
           imagesArr.push(oldImg);
         }
       }
-    })
-    .then(() => {
       return Product.updateOne(
         { _id: req.body._id },
-        { $set: imagesArr ? { ...req.body, images: imagesArr } : req.body }
+        {
+          $set: imagesArr
+            ? { ...req.body, images: imagesArr, colors: parsedColors }
+            : { ...req.body, colors: parsedColors },
+        }
       );
     })
     .then((obj) => res.status(200).json(obj))
