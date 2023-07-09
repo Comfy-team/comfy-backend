@@ -96,7 +96,7 @@ module.exports.deleteProductFromCart = (req, res, next) => {
     }).then((cart) => {
       const itemIndex = cart.items.findIndex(
         (item) =>
-          item.product_id.toString() === req.body.itemId &&
+          item.product_id._id.toString() === req.body.itemId &&
           item.color === req.body.color
       );
       cart.items.splice(itemIndex, 1);
