@@ -24,7 +24,10 @@ module.exports.getAllCarts = (req, res, next) => {
 
 module.exports.getCartById = (req, res, next) => {
   Cart.findOne({ _id: req.params.id })
-    .populate("items.product_id")
+    .populate({
+      path: "items.product_id",
+      select: { name: 1, images: 1, price: 1, discount: 1, colors: 1 },
+    })
     .then((cart) => {
       if (cart == null) {
         throw new Error("Cart not found");
@@ -42,8 +45,10 @@ exports.postProductToCart = (req, res, next) => {
   const quantity = 1;
 
   Cart.findOne({ _id: id })
-    .populate("items.product_id")
-    .then((cart) => {
+    .populate({
+      path: "items.product_id",
+      select: { name: 1, images: 1, price: 1, discount: 1, colors: 1 },
+    }).then((cart) => {
       if (cart == null) {
         throw new Error("Cart not found");
       }
@@ -63,8 +68,10 @@ exports.postProductToCart = (req, res, next) => {
 exports.updateProductInCart = (req, res, next) => {
   let totalPrice;
   Cart.findOne({ _id: req.params.cartId })
-    .populate("items.product_id")
-    .then((cart) => {
+    .populate({
+      path: "items.product_id",
+      select: { name: 1, images: 1, price: 1, discount: 1, colors: 1 },
+    }).then((cart) => {
       const itemIndex = cart.items.findIndex(
         (item) =>
           item.product_id._id.toString() === req.body.itemId &&
@@ -83,8 +90,10 @@ exports.updateProductInCart = (req, res, next) => {
 module.exports.deleteProductFromCart = (req, res, next) => {
   let totalPrice;
   Cart.findOne({ _id: req.params.id })
-    .populate("items.product_id")
-    .then((cart) => {
+    .populate({
+      path: "items.product_id",
+      select: { name: 1, images: 1, price: 1, discount: 1, colors: 1 },
+    }).then((cart) => {
       const itemIndex = cart.items.findIndex(
         (item) =>
           item.product_id.toString() === req.body.itemId &&
@@ -104,7 +113,6 @@ module.exports.deleteProductFromCart = (req, res, next) => {
 
 module.exports.emptyCart = (req, res, next) => {
   const { id } = req.params;
-
   Cart.findOne({ _id: id })
     .then((cart) => {
       if (cart == null) {
