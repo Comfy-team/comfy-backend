@@ -1,12 +1,10 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 
-
 const saltRounds = +process.env.saltRounds;
 const salt = bcrypt.genSaltSync(saltRounds);
 
 const { getDataOfPage } = require("./paginationController");
-
 
 require("../models/userSchema");
 const User = mongoose.model("users");
@@ -15,41 +13,45 @@ const Cart = mongoose.model("cart");
 module.exports.getAllUsers = (request, response, next) => {
   User.find({})
     .then((data) => {
-       // handle pagination
-       const page = request.query.page ? request.query.page : 1;
-       const { totalPages, pageData } = getDataOfPage(data, page);
+      // handle pagination
+      const page = request.query.page ? request.query.page : 1;
+      const { totalPages, pageData } = getDataOfPage(data, page);
       response.status(200).json({
         data: pageData,
         totalPages,
-        totalUsers:data.length
-      })
+        totalUsers: data.length,
+      });
     })
     .catch((error) => next(error));
 };
 
-module.exports.searchForUser= (request, response, next) => {
+module.exports.searchForUser = (request, response, next) => {
   User.find()
-  .then((data)=>{
-    const arr = data.filter((ele) => {
-      return (
-        ele.email.toLowerCase().includes(request.query.search.toLowerCase()) ||
-        ele._id.toString().toLowerCase().includes(request.query.search.toLowerCase())
-      );
+    .then((data) => {
+      const arr = data.filter((ele) => {
+        return (
+          ele.email
+            .toLowerCase()
+            .includes(request.query.search.toLowerCase()) ||
+          ele._id
+            .toString()
+            .toLowerCase()
+            .includes(request.query.search.toLowerCase())
+        );
+      });
+      return arr;
     })
-    return arr;
-  }).then((data)=>{
-    const page = request.query.page ? request.query.page : 1;
-    const { totalPages, pageData } = getDataOfPage(data, page);
-    response.status(200).json({
-      data: pageData,
-      totalPages,
-      totalUsers:data.length
-    });
-  }
-
-  )
-  .catch((error) => next(error))
-}
+    .then((data) => {
+      const page = request.query.page ? request.query.page : 1;
+      const { totalPages, pageData } = getDataOfPage(data, page);
+      response.status(200).json({
+        data: pageData,
+        totalPages,
+        totalUsers: data.length,
+      });
+    })
+    .catch((error) => next(error));
+};
 
 module.exports.getUserById = (request, response, next) => {
   User.findOne({ _id: request.params.id })
@@ -120,7 +122,7 @@ module.exports.deleteUser = (request, response, next) => {
       if (!user) {
         throw new Error("user not found with the specified _id value");
       }
-      // delete the user cart 
+      // delete the user cart
       return Cart.deleteOne({ _id: user.cart_id });
     })
     .then((data) => {
@@ -135,7 +137,14 @@ module.exports.getUserCart = (request, response, next) => {
       path: "cart_id",
       populate: {
         path: "items.product_id",
-        select: { name: 1, images: 1, brand: 1, price:1,discount:1,colors:1},
+        select: {
+          name: 1,
+          images: 1,
+          brand: 1,
+          price: 1,
+          discount: 1,
+          colors: 1,
+        },
         populate: {
           path: "brand",
           select: { name: 1 },
@@ -143,7 +152,19 @@ module.exports.getUserCart = (request, response, next) => {
       },
     })
     .then((data) => {
-      response.status(200).json(data[0]["cart_id"]);
+      const cart = { ...data[0]["cart_id"]._doc };
+      const totalPrice =
+        cart.items.length > 0
+          ? cart.items.reduce((total, item) => {
+              const itemPrice =
+                item.product_id.price *
+                item.quantity *
+                (1 - item.product_id.discount / 100);
+              return total + itemPrice;
+            }, 0)
+          : 0;
+      cart.totalPrice = totalPrice.toFixed(2);
+      response.status(200).json(cart);
     })
     .catch((error) => next(error));
 };
@@ -155,7 +176,7 @@ module.exports.getUserOrders = (request, response, next) => {
       select: { date: 1, userId: 1, items: 1, totalPrice: 1 },
       populate: {
         path: "items.product_id",
-        select: { name: 1, images: 1, brand: 1, discount:1 },
+        select: { name: 1, images: 1, brand: 1, discount: 1 },
         populate: {
           path: "brand",
           select: { name: 1 },
