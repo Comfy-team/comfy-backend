@@ -84,7 +84,6 @@ exports.postOrders = async (req, res, next) => {
 
 exports.getSingleOrders = (req, res, next) => {
   Orders.findOne({ _id: req.params.id })
-  .populate("userId")
     .then(data => {
       if (data == null) {
         throw new Error("order not found");
