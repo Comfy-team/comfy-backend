@@ -69,7 +69,7 @@ module.exports.updateValidation = [
         throw new Error("color must be hex");
       }
       if (
-        !parsedArr.every((ele) => !Number.isNaN(ele.stock) && ele.stock > 0)
+        !parsedArr.every((ele) => !Number.isNaN(ele.stock) && ele.stock >= 0)
       ) {
         throw new Error("stock must be number greater than 0");
       }
