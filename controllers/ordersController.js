@@ -59,7 +59,10 @@ exports.postOrders = async (req, res, next) => {
         throw new Error(`Product not found with _id: ${item.product_id._id}`);
       }
 
-      if (product.colors[0].stock < item.quantity) {
+      if (
+        product.colors[0].stock === 0 ||
+        product.colors[0].stock < item.quantity
+      ) {
         throw new Error(`Insufficient stock for product: ${product.name}`);
       }
       product.colors[0].stock -= item.quantity;
