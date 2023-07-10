@@ -1,5 +1,4 @@
 const {query,param,body}=require("express-validator");
-const validator = require('validator');
 
 exports.updateValidation=[
     body("id").isMongoId().withMessage('Invalid ObjectId'),
