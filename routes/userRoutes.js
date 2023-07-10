@@ -1,6 +1,5 @@
 const express = require("express");
 
-
 const validations = require("../middlewares/validations/userValidation");
 const validator = require("../middlewares/validations/validator");
 const controller = require("../controllers/userController");
@@ -11,8 +10,7 @@ const router = express.Router();
 router
   .route("/users")
   .get(authMW.verifyToken,authMW.isAdmin,controller.getAllUsers)
-  .patch(authMW.verifyToken,authMW.isUserOrAdmin,validations.updateValidation,validator,controller.updateUser)
-  // .delete(authMW.verifyToken,authMW.isUserOfIdOrAdmin,validations.deleteValidation,validator,controller.deleteUser)
+  .patch(authMW.verifyToken,authMW.isUserOfIdOrAdmin,validations.updateValidation,validator,controller.updateUser)
 
 router
   .route("/users/orders").get(authMW.verifyToken,authMW.isAdmin,validator,controller.getAllUsersOrders) 
