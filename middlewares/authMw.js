@@ -22,10 +22,7 @@ module.exports.isAdmin = (req, res, next) => {
 };
 
 module.exports.isUserOrAdmin = (req, res, next) => {
-  if (
-    req.decodedObject.role === "user" ||
-    req.decodedObject.role === "admin"
-  ) {
+  if (req.decodedObject.role === "user" || req.decodedObject.role === "admin") {
     next();
   } else {
     let error = new Error("not Authorized");
@@ -35,10 +32,10 @@ module.exports.isUserOrAdmin = (req, res, next) => {
 };
 
 module.exports.isUserOfIdOrAdmin = (req, res, next) => {
+  let userId = req.query.id || req.params.id;
   if (
     req.decodedObject.role === "admin" ||
-    (req.decodedObject.role === "user" &&
-      req.decodedObject.id === req.params.id)
+    (req.decodedObject.role === "user" && req.decodedObject.id === userId)
   ) {
     next();
   } else {
