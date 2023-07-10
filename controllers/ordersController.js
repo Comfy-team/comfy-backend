@@ -88,13 +88,6 @@ exports.getSingleOrders = (req, res, next) => {
       path: "userId",
       select: { fullName: 1 },
     })
-    .then(user => {
-      if (user == null) {
-        throw new Error("user not found");
-      }
-      res.status(200).json(order);
-    })
-
     .then(order => {
       if (order == null) {
         throw new Error("order not found");
