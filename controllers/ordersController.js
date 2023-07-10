@@ -54,15 +54,15 @@ exports.postOrders = async (req, res, next) => {
       totalPrice: req.body.totalPrice,
     });
     for (const item of order.items) {
-      const product = await Product.findOne({ _id: item.product_id });
+      const product = await Product.findOne({ _id: item.product_id._id });
       if (!product) {
-        throw new Error(`Product not found with _id: ${item.product_id}`);
+        throw new Error(`Product not found with _id: ${item.product_id._id}`);
       }
 
-      if (product.stock < item.quantity) {
+      if (product.colors[0].stock < item.quantity) {
         throw new Error(`Insufficient stock for product: ${product.name}`);
       }
-      product.stock -= item.quantity;
+      product.colors[0].stock -= item.quantity;
       await product.save();
     }
 
@@ -98,8 +98,8 @@ exports.deleteSingleOrders = (req, res, next) => {
       }
       Order.items.forEach(items => {
         Product.findOneAndUpdate(
-          { _id: items.product_id },
-          { $inc: { stock: items.quantity } }
+          { _id: items.product_id._id },
+          { $inc: { "colors.0.stock": items.quantity } }
         )
           .then(product => {
             if (!product) {
