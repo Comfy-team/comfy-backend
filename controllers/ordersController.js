@@ -84,15 +84,26 @@ exports.postOrders = async (req, res, next) => {
 
 exports.getSingleOrders = (req, res, next) => {
   Orders.findOne({ _id: req.params.id })
-    .then(data => {
-      if (data == null) {
-        throw new Error("order not found");
-      } else {
-        res.json(data);
+    .populate({
+      path: "userId",
+      select: { fullName: 1 },
+    })
+    .then(user => {
+      if (user == null) {
+        throw new Error("user not found");
       }
+      res.status(200).json(order);
+    })
+
+    .then(order => {
+      if (order == null) {
+        throw new Error("order not found");
+      }
+      res.status(200).json(order);
     })
     .catch(error => next(error));
 };
+
 exports.deleteSingleOrders = (req, res, next) => {
   Orders.findOne({ _id: req.params.id })
     .then(Order => {
