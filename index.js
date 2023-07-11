@@ -27,12 +27,7 @@ mongoose
   })
   .catch((error) => console.log("Error in DB " + error));
 
-server.use(
-  cors({
-    credentials: true,
-    origin: ["http://localhost:3000", "https://comfy4.vercel.app"],
-  })
-);
+server.use(cors());
 
 // logging MW
 server.use(morgan("short"));
