@@ -5,8 +5,7 @@ const Cart = mongoose.model("cart");
 
 const calculateTotalPrice = (products) => {
   const totalPrice = products.reduce((total, item) => {
-    const color = item.color;
-    const itemStock = item.product_id.colors.find(ele => ele.color === color)?.stock || 0;
+    const itemStock = item.product_id.colors.find(ele => ele.color === item.color)?.stock || 0;
     if (itemStock > 0) {
       const itemPrice = item.product_id.price * item.quantity * (1 - item.product_id.discount / 100);
       return total + itemPrice;
