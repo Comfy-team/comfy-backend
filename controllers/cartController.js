@@ -10,8 +10,6 @@ const calculateTotalPrice = (products) => {
       const itemPrice = item.product_id.price * item.quantity * (1 - item.product_id.discount / 100);
       return total + itemPrice;
     } else {
-      item.quantity = 0;
-      item.save();
       return total;
     }
   }, 0);
