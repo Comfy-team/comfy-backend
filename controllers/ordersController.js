@@ -25,11 +25,19 @@ module.exports.searchForOrder = (req, res, next) => {
   Orders.find({})
     .then(data => {
       const arr = data.filter(ele => {
-        return ele._id
-          .toString()
-          .toLowerCase()
-          .includes(req.query.search.toLowerCase());
+        return (
+          ele.totalPrice === +req.query.search ||
+          ele.userId
+            .toString()
+            .toLowerCase()
+            .includes(req.query.search.toLowerCase()) ||
+          ele._id
+            .toString()
+            .toLowerCase()
+            .includes(req.query.search.toLowerCase())
+        );
       });
+
       return arr;
     })
     .then(data => {
