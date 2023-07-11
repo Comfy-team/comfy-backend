@@ -156,11 +156,18 @@ module.exports.getUserCart = (request, response, next) => {
       const totalPrice =
         cart.items.length > 0
           ? cart.items.reduce((total, item) => {
-              const itemPrice =
-                item.product_id.price *
-                item.quantity *
-                (1 - item.product_id.discount / 100);
-              return total + itemPrice;
+              const itemStock =
+                item.product_id.colors.find((ele) => ele.color === item.color)
+                  ?.stock || 0;
+              if (itemStock > 0) {
+                const itemPrice =
+                  item.product_id.price *
+                  item.quantity *
+                  (1 - item.product_id.discount / 100);
+                return total + itemPrice;
+              } else {
+                return total;
+              }
             }, 0)
           : 0;
       cart.totalPrice = totalPrice.toFixed(2);
