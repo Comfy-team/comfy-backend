@@ -12,14 +12,17 @@ const dataPerPage = 12;
 module.exports.getAllProducts = (req, res, next) => {
   const filter = {};
   const sorting = {};
+  const minMaxPricesFilter = {};
   if (req.query.price && req.query.price != 0) {
     filter.price = { $lte: +req.query.price };
   }
   if (req.query.brand && req.query.brand !== "all") {
     filter.brand = req.query.brand;
+    minMaxPricesFilter.brand = req.query.brand;
   }
   if (req.query.category && req.query.category !== "all") {
     filter.category = req.query.category;
+    minMaxPricesFilter.category = req.query.category;
   }
   if (req.query.sort && (req.query.sort == -1 || req.query.sort == 1)) {
     sorting.price = Number(req.query.sort);
@@ -39,7 +42,9 @@ module.exports.getAllProducts = (req, res, next) => {
         maxPrice = data[0];
         minPrice = data[data.length - 1];
       } else {
-        [minPrice, maxPrice] = await Product.find(filter, { price: 1 })
+        [minPrice, maxPrice] = await Product.find(minMaxPricesFilter, {
+          price: 1,
+        })
           .sort({ price: 1 })
           .then((data) => [
             data[0] ? data[0].price : 0,
