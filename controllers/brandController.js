@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 
 require("../models/brandSchema");
-
 const { getDataOfPage } = require("./paginationController");
+
 const Brand = mongoose.model("brands");
 
 module.exports.getAllBrands = (req, res, next) => {
@@ -66,8 +66,9 @@ module.exports.addBrand = (req, res, next) => {
   });
   object
     .save()
+    .then(() => Brand.find({}))
     .then((data) => {
-      res.status(201).json(data);
+      res.status(200).json(data);
     })
     .catch((error) => next(error));
 };
@@ -77,7 +78,10 @@ module.exports.updateBrand = (req, res, next) => {
     { _id: req.body._id },
     { $set: req.file ? { ...req.body, image: req.file.path } : req.body }
   )
-    .then((obj) => res.status(200).json(obj))
+    .then(() => Brand.find({}))
+    .then((data) => {
+      res.status(200).json(data);
+    })
     .catch((error) => next(error));
 };
 
