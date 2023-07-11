@@ -54,18 +54,17 @@ exports.postOrders = async (req, res, next) => {
       totalPrice: req.body.totalPrice,
     });
     for (const item of order.items) {
+      const color = item?.color;
       const product = await Product.findOne({ _id: item.product_id._id });
       if (!product) {
         throw new Error(`Product not found with _id: ${item.product_id._id}`);
       }
-
-      if (
-        product.colors[0].stock === 0 ||
-        product.colors[0].stock < item.quantity
-      ) {
+      const colorObject = product.colors.find(c => c.color === color);
+      if (!colorObject || colorObject.stock < item.quantity) {
         throw new Error(`Insufficient stock for product: ${product.name}`);
       }
-      product.colors[0].stock -= item.quantity;
+
+      colorObject.stock -= item.quantity;
       await product.save();
     }
 
