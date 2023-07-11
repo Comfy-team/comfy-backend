@@ -5,11 +5,16 @@ const Cart = mongoose.model("cart");
 
 const calculateTotalPrice = (products) => {
   const totalPrice = products.reduce((total, item) => {
-    const itemPrice =
-      item.product_id.price *
-      item.quantity *
-      (1 - item.product_id.discount / 100);
-    return total + itemPrice;
+    const color = item.color;
+    const itemStock = item.product_id.colors.find(ele => ele.color === color)?.stock || 0;
+    if (itemStock > 0) {
+      const itemPrice = item.product_id.price * item.quantity * (1 - item.product_id.discount / 100);
+      return total + itemPrice;
+    } else {
+      item.quantity = 0;
+      item.save();
+      return total;
+    }
   }, 0);
   return totalPrice.toFixed(2);
 };
