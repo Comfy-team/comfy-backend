@@ -46,7 +46,7 @@ mongoose
 app.use(
   cors({
     credentials: true,
-    origin: ["http://localhost:3000", "https://comfy-frontend.vercel.app", "https://comfy-team.github.io"],
+    origin: ["https://comfy-frontend.vercel.app"],
   })
 );
 
@@ -60,7 +60,7 @@ app.use(registerRoutes);
 // authentication
 app.use(authenticationRoute);
 
-app.use("/uploads", express.static("uploads"));
+app.use("../uploads", express.static("uploads"));
 
 // routes
 app.use(productRoutes);
