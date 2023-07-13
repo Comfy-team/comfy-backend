@@ -40,12 +40,12 @@ router
     validations.updateValidation,
     validator,
     controller.updateBrand
-  )
-  router
+  );
+router
   .route("/brands/search")
-  .get(validations.searchValidation,validator,controller.searchForUser) 
-   
-  router
+  .get(validations.searchValidation, validator, controller.searchForBrand);
+
+router
   .route("/brands/:id")
   .delete(
     verifyToken,

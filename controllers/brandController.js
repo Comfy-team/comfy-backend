@@ -93,17 +93,12 @@ module.exports.deleteBrand = (req, res, next) => {
     .catch((error) => next(error));
 };
 
-module.exports.searchForUser = (req, res, next) => {
+module.exports.searchForBrand = (req, res, next) => {
+  const regex = new RegExp(req.query.search, "ig");
   Brand.find()
     .then((data) => {
       const arr = data.filter((ele) => {
-        return (
-          ele.name.toLowerCase().includes(req.query.search.toLowerCase()) ||
-          ele._id
-            .toString()
-            .toLowerCase()
-            .includes(req.query.search.toLowerCase())
-        );
+        return regex.test(ele.name) || regex.test(ele._id);
       });
       return arr;
     })
