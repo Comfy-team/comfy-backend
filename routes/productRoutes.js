@@ -14,7 +14,7 @@ const storage = multer.diskStorage({
       callback(new Error("invalid image type"));
       return;
     }
-    callback(null, "./uploads/products/");
+    callback(null, "../uploads/products/");
   },
   filename: (req, file, callback) => {
     callback(null, file.originalname);
