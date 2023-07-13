@@ -1,12 +1,69 @@
-###Notes
-                
-+ When creating a branch: ```git checkout -b key-<branch-name>```
-+ When commiting: ```git commit -m "key <commit message>"```
-+ When pushing: ```git push origin <branch-name>```
-+ When there're subtasks:
- ```git checkout -b main-task-key-<branch-name>```
- ``` git commit -m "subtask1-key <commit message> task1"```
- ``` git commit -m "subtask2-key <commit message> task2" ```
+# Comfy
+## Table of contents
 
- when pull  " git pull origin main "
- to go to specific branch "``git checkout <branch-name> ``"
+- [Overview](#overview)
+  - [About](#Abput)
+  - [Screenshot](#screenshot)
+- [My process](#my-process)
+  - [Built with](#built-with)
+  - [Future work](#future-work)
+- [Author](#author)
+
+## Overview
+### About
+
+[Comfy](https://comfy-frontend.vercel.app/) is a MERN fullstack furniture Ecommerce project that has the following features:
+
+- Regiseteration / logging-in system
+- Shopping cart
+- Product details
+- Checkout process
+- User account
+- Admin dashboard
+- Search for products
+- Filter products by price, categoty and brand
+- Contact form
+
+### Screenshot
+
+![](./src/assets/readme-screenshot.png)
+
+### Built with
+
+- Semantic HTML5 markup
+- CSS
+- JavaScript
+- Bootstrap
+- React-Bootstrap
+- React
+- React-router
+- Redux
+- NodeJS
+- Express
+- MongoDB
+- Mongoose
+- Multer
+- Font Awesome
+- Apex charts
+- Axios
+- EmailJS
+- Leaflet
+- Formik
+- Yup
+- React-multi-carousel
+- React-full-screen
+
+### Future work
+
+- Add a Wishlist
+- Retrieve password option
+- Loggin in / registering using google account
+
+## Author
+
+Comfy is an ITI graduation project built by a team of 4 aspiring developers:
+
+- [Aya Mohamed](https://github.com/Aya-Saeed261)
+- [Amal Halim](https://github.com/amallhalim)
+- [Mariam Abdallah](https://github.com/mariam-abdallah)
+- [Safaa Ibrahim](https://github.com/Safaa-Ebrahim)
