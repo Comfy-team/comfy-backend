@@ -60,7 +60,7 @@ app.use(registerRoutes);
 // authentication
 app.use(authenticationRoute);
 
-app.use("../uploads", express.static("../uploads"));
+app.use("/tmp", express.static("uploads"));
 
 // routes
 app.use(productRoutes);
