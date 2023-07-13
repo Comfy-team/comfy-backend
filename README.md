@@ -1,10 +1,11 @@
-# Comfy
+# [Comfy](https://comfy-frontend.vercel.app)
 ## Table of contents
 
 - [Overview](#overview)
-  - [About](#Abput)
+  - [About](#About)
   - [Screenshot](#screenshot)
-- [My process](#my-process)
+  - [Links](#links)
+- [Our process](#our-process)
   - [Built with](#built-with)
   - [Future work](#future-work)
 - [Author](#author)
@@ -12,7 +13,7 @@
 ## Overview
 ### About
 
-[Comfy](https://comfy-frontend.vercel.app/) is a MERN fullstack furniture Ecommerce project that has the following features:
+[Comfy](https://comfy-frontend.vercel.app) is a MERN fullstack furniture Ecommerce project that has the following features:
 
 - Regiseteration / logging-in system
 - Shopping cart
@@ -26,7 +27,14 @@
 
 ### Screenshot
 
-![](./src/assets/readme-screenshot.png)
+![](./uploads/readme-screenshot.png)
+
+### Links
+
+- live site: [link](https://comfy-frontend.vercel.app)
+- frontend repo: [link](https://github.com/Comfy-team/comfy-frontend)
+
+## Our process
 
 ### Built with
 
