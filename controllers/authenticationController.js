@@ -9,7 +9,7 @@ module.exports.login = (req, res, next) => {
   // Check if admin
   if (
     req.body.email === "admin@gmail.com" &&
-    req.body.password === "123_Admin_321"
+    req.body.password === "1234$Admin@Comfy$4321"
   ) {
     token = jwt.sign(
       {
