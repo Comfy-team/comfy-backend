@@ -1,3 +1,15 @@
 {
-  "rewrites": [{ "source": "/(.*)", "destination": "/api" }]
+  "rewrites": [{ "source": "/(.*)", "destination": "/api" }],"build": {
+    "env": {
+      "NODE_OPTIONS": "--max-old-space-size=256"
+    }
+  },
+  "routes": [
+    {
+      "src": "/api/upload",
+      "dest": "/api/upload.js",
+      "methods": ["POST"],
+      "body": "50mb"
+    }
+  ]
 }
