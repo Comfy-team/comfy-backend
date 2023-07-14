@@ -99,6 +99,7 @@ module.exports.searchForProduct = (req, res, next) => {
       const arr = data.filter(
         (ele) =>
           regex.test(ele.name) ||
+          regex.test(ele._id) ||
           regex.test(ele.category.name) ||
           regex.test(ele.brand.name)
       );
