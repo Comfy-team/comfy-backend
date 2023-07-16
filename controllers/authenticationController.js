@@ -8,12 +8,12 @@ module.exports.login = (req, res, next) => {
   let token;
   // Check if admin
   if (
-    req.body.email === "admin@gmail.com" &&
-    req.body.password === "1234$Admin@Comfy$4321"
+    req.body.email === process.env.adminEmail &&
+    req.body.password === process.env.adminPass
   ) {
     token = jwt.sign(
       {
-        email: "admin@gmail.com",
+        email: process.env.adminEmail,
         role: "admin",
       },
       process.env.secretKey,
